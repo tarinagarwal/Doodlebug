@@ -375,7 +375,9 @@ export async function fetchUserBundle(login: string, token?: string): Promise<Us
 
 export async function fetchRepo(owner: string, name: string, token?: string): Promise<RepoInfo> {
   const t = token || process.env.GITHUB_TOKEN || undefined;
-  const r = await ghRest<RestRepo & { owner: { login: string } }>(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`, t);
+  const r = await ghRest<RestRepo & { owner: { login: string }; private?: boolean }>(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`, t);
+  // Never expose private repositories on a public card URL, even when the owner's token is available.
+  if (r.private) throw new GitHubError("not_found", "Repository is private", 404);
   return {
     owner: r.owner.login,
     name: r.name,
