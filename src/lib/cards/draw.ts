@@ -126,6 +126,10 @@ export class Sketch {
     return this.toSvg(this.gen.curve(pts, this.opts(o)), o);
   }
   arc(cx: number, cy: number, w: number, h: number, start: number, stop: number, closed = false, o: SketchOpts = {}): string {
+    // rough.js loops forever on zero/negative-length arcs — guard hard.
+    if (!Number.isFinite(start) || !Number.isFinite(stop)) return "";
+    if (stop < start) [start, stop] = [stop, start];
+    if (stop - start < 0.012) return "";
     return this.toSvg(this.gen.arc(cx, cy, w, h, start, stop, closed, this.opts(o)), o);
   }
   path(d: string, o: SketchOpts = {}): string {

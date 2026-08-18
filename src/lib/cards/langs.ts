@@ -38,7 +38,8 @@ export function langsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
       if (layout === "pie") {
         body.push(sk.arc(cx, cy, R * 2, R * 2, ang, stop, true, { stroke: t.ink, strokeWidth: 1.4, fill: l.color, fillStyle: "solid", fillOpacity: 0.85, roughness: 1 }));
       } else {
-        body.push(sk.arc(cx, cy, R * 2 - 14, R * 2 - 14, ang + 0.02, stop - 0.02, false, { stroke: l.color, strokeWidth: 12, roughness: 1.2, double: false }));
+        const gap = Math.min(0.02, (stop - ang) / 4);
+        body.push(sk.arc(cx, cy, R * 2 - 14, R * 2 - 14, ang + gap, stop - gap, false, { stroke: l.color, strokeWidth: 12, roughness: 1.2, double: false }));
       }
       ang = stop;
     });
