@@ -40,23 +40,28 @@ export function truncate(text: string, maxWidth: number, size: number, font: Fon
 }
 
 export function wrap(text: string, maxWidth: number, size: number, font: FontKey = "hand", maxLines = 3): string[] {
-  const words = text.replace(/\s+/g, " ").trim().split(" ");
+  const words = text.replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
   const lines: string[] = [];
   let cur = "";
-  for (const w of words) {
+  let i = 0;
+  for (; i < words.length; i++) {
+    const w = words[i];
     const test = cur ? cur + " " + w : w;
     if (measure(test, size, font) <= maxWidth || !cur) {
       cur = test;
     } else {
       lines.push(cur);
       cur = w;
+      if (lines.length === maxLines) break;
     }
-    if (lines.length === maxLines) break;
   }
-  if (lines.length < maxLines && cur) lines.push(cur);
-  if (lines.length === maxLines && (cur !== lines[maxLines - 1] || words.join(" ") !== lines.join(" "))) {
-    lines[maxLines - 1] = truncate(lines[maxLines - 1], maxWidth, size, font);
+  if (lines.length < maxLines) {
+    if (cur) lines.push(cur);
+    return lines;
   }
+  // overflow: cram the rest into the last line and truncate with an ellipsis
+  const rest = [cur, ...words.slice(i + 1)].filter(Boolean).join(" ");
+  if (rest) lines[maxLines - 1] = truncate(lines[maxLines - 1] + " " + rest, maxWidth, size, font);
   return lines;
 }
 

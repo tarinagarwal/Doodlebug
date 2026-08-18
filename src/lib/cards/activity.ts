@@ -39,7 +39,7 @@ export function activityCard(b: UserBundle, sp: URLSearchParams, c: CommonParams
     topPad = c.hideTitle ? 40 : 72;
   const cols = Math.ceil((days.length + firstDow) / 7);
   const W = Math.max(300, left + cols * pitch + 30);
-  const H = topPad + 7 * pitch + (showLegend ? 40 : 22);
+  const H = topPad + 7 * pitch + 52;
   const sk = new Sketch(c.seed + 41);
   const body: string[] = [];
   const title = c.title ?? `${possessive(b.stats.name || b.stats.login)} Contribution Doodle`;
@@ -60,7 +60,6 @@ export function activityCard(b: UserBundle, sp: URLSearchParams, c: CommonParams
   ["Mon", "Wed", "Fri"].forEach((d, i) => body.push(text(left - 8, topPad + (1 + i * 2) * pitch + 10, d, { size: 11, fill: t.muted, anchor: "end" })));
 
   // cells
-  let lastMonth = -1;
   days.forEach((d: CalendarDay, i) => {
     const idx = i + firstDow;
     const col = Math.floor(idx / 7);
@@ -72,20 +71,25 @@ export function activityCard(b: UserBundle, sp: URLSearchParams, c: CommonParams
     body.push(
       `<rect x="${r(x)}" y="${r(y)}" width="${cell}" height="${cell}" rx="2.5" fill="${colors[lv]}" stroke="${t.ink}" stroke-opacity="${lv === 0 ? 0.18 : 0.55}" stroke-width="1" transform="rotate(${r(rot)} ${r(x + cell / 2)} ${r(y + cell / 2)})"><title>${d.date}: ${d.count} contribution${d.count === 1 ? "" : "s"}</title></rect>`,
     );
-    const m = new Date(d.date + "T00:00:00Z").getUTCMonth();
-    if (m !== lastMonth && row === 0 && col < cols - 1) {
-      body.push(text(left + col * pitch, topPad - 6, MONTHS[m], { size: 11, fill: t.muted }));
-      lastMonth = m;
-    } else if (m !== lastMonth && row !== 0) {
-      lastMonth = m; // month starts mid-week: skip the label to avoid overlap
-    }
   });
+  // month labels: label a column when its first day starts a new month
+  let prevMonth = -1;
+  for (let col = 0; col < cols; col++) {
+    const i = col * 7 - firstDow; // index of the row-0 day in this column
+    const d = days[Math.max(0, i)];
+    if (!d) continue;
+    const m = new Date(d.date + "T00:00:00Z").getUTCMonth();
+    if (m !== prevMonth) {
+      if (col < cols - 1 && (col > 0 || i >= 0)) body.push(text(left + col * pitch, topPad - 6, MONTHS[m], { size: 11, fill: t.muted }));
+      prevMonth = m;
+    }
+  }
 
   // summary + legend
   const total = days.reduce((a, d) => a + d.count, 0);
   const summaryY = topPad + 7 * pitch + 20;
   body.push(text(left, summaryY, `${fmtNum(total)} contributions in the last ${weeks} weeks`, { size: 13, fill: t.ink }));
-  if (days.length) body.push(text(left, summaryY + 15, `${fmtDate(days[0].date)} → ${fmtDate(days[days.length - 1].date)}`, { size: 11, fill: t.muted }));
+  if (days.length) body.push(text(left, summaryY + 16, `${fmtDate(days[0].date)} → ${fmtDate(days[days.length - 1].date)}`, { size: 11, fill: t.muted }));
   if (showLegend) {
     let lx = W - 30 - 5 * 15 - 60;
     body.push(text(lx - 6, summaryY, "less", { size: 11, fill: t.muted, anchor: "end" }));
@@ -96,7 +100,7 @@ export function activityCard(b: UserBundle, sp: URLSearchParams, c: CommonParams
     body.push(text(lx + 2, summaryY, "more", { size: 11, fill: t.muted }));
   }
 
-  return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, animate: c.animate }, body.join(""));
+  return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, bottomDoodle: false, animate: c.animate }, body.join(""));
 }
 
 /** Hand-drawn line graph of daily contributions */
@@ -140,8 +144,10 @@ export function graphCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
     });
     if (cal[peak].count > 0) {
       body.push(sk.circle(pts[peak][0], pts[peak][1], 10, { stroke: t.ink, strokeWidth: 1.4, fill: t.accent, fillStyle: "solid", roughness: 0.8, double: false }));
-      const lx = Math.min(right - 60, Math.max(left + 10, pts[peak][0] - 30));
-      body.push(text(lx, Math.max(top + 4, pts[peak][1] - 14), `peak: ${cal[peak].count} on ${fmtDate(cal[peak].date, false)}`, { size: 12, fill: t.ink }));
+      const label = `peak: ${cal[peak].count} on ${fmtDate(cal[peak].date, false)}`;
+      const nearRight = pts[peak][0] > right - 130;
+      const ly = pts[peak][1] < top + 18 ? pts[peak][1] + 5 : pts[peak][1] - 12;
+      body.push(text(nearRight ? pts[peak][0] - 12 : pts[peak][0] + 12, ly, label, { size: 12, fill: t.ink, anchor: nearRight ? "end" : "start" }));
     }
   }
   // x labels
@@ -151,5 +157,5 @@ export function graphCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
     const total = cal.reduce((a, d) => a + d.count, 0);
     body.push(text((left + right) / 2, bottom + 20, `${fmtNum(total)} contributions · last ${cal.length} days`, { size: 12, fill: t.muted, anchor: "middle" }));
   }
-  return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, animate: c.animate }, body.join(""));
+  return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, bottomDoodle: false, animate: c.animate }, body.join(""));
 }

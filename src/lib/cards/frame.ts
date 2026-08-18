@@ -1,6 +1,6 @@
 import { caveatBoldBase64, kalamBase64, patrickHandBase64 } from "@/fonts/embedded";
 import { Sketch } from "./draw";
-import { measure, r, text, truncate } from "./text";
+import { esc, measure, r, text, truncate } from "./text";
 import type { Theme } from "./theme";
 
 export interface FrameOptions {
@@ -24,6 +24,8 @@ export interface FrameOptions {
   padding?: number;
   /** animate=false disables the draw-in animation */
   animate?: boolean;
+  /** set false to skip the bottom-left squiggle (cards that draw text there) */
+  bottomDoodle?: boolean;
 }
 
 export function fontFaces(fonts: FrameOptions["fonts"] = ["hand", "title"]): string {
@@ -85,7 +87,7 @@ export function frame(o: FrameOptions, body: string): string {
     const tx = pad + 22 + (o.titleIcon ? 30 : 0);
     const ty = pad + 32;
     const size = 26;
-    const title = truncate(o.title, W - tx - 40, size, "title");
+    const title = truncate(o.title, W - tx - 30, size, "title");
     const tw = measure(title, size, "title");
     parts.push(sk.highlight(tx - 6, ty - 14, tw + 12, 16, t.accent, 0.5));
     if (o.titleIcon) parts.push(`<g transform="translate(${pad + 18} ${ty - 20})">${o.titleIcon}</g>`);
@@ -98,13 +100,13 @@ export function frame(o: FrameOptions, body: string): string {
   if (o.doodles !== false) {
     parts.push(sk.sparkle(W - pad - 22, pad + 18, 5, t.accent2));
     parts.push(sk.sparkle(W - pad - 34, pad + 30, 3, t.accent));
-    parts.push(sk.squiggle(pad + 16, H - pad - 12, 42, 3, t.accent2));
+    if (o.bottomDoodle !== false) parts.push(sk.squiggle(pad + 16, H - pad - 12, 42, 3, t.accent2));
   }
 
   const anim = o.animate === false ? "" : `<style>@keyframes db-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}} .db-body{animation:db-in .55s ease-out both}</style>`;
-  const desc = o.desc ? `<desc>${o.desc.replace(/[<&]/g, "")}</desc>` : "";
+  const desc = o.desc ? `<desc>${esc(o.desc)}</desc>` : "";
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${(o.title ?? "Doodlebug card").replace(/"/g, "")}">${desc}<defs><style>${fontFaces(o.fonts)}</style>${grid.defs}${o.defs ?? ""}</defs>${anim}${parts.join("")}<g class="db-body" transform="translate(0 ${r(bodyOffset)})">${body}</g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title ?? "Doodlebug card")}">${desc}<defs><style>${fontFaces(o.fonts)}</style>${grid.defs}${o.defs ?? ""}</defs>${anim}${parts.join("")}<g class="db-body" transform="translate(0 ${r(bodyOffset)})">${body}</g></svg>`;
 }
 
 /** Card shown when something goes wrong (user not found, rate limit, ...). */

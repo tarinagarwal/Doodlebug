@@ -61,5 +61,5 @@ export function repoCard(repo: RepoInfo, sp: URLSearchParams, c: CommonParams): 
     }
   }
 
-  return frame({ width: W, height: H, theme: t, seed: c.seed, hideBorder: c.hideBorder, doodles: c.doodles, animate: c.animate, desc: `${repo.owner}/${repo.name}` }, body.join(""));
+  return frame({ width: W, height: H, theme: t, seed: c.seed, hideBorder: c.hideBorder, doodles: c.doodles, bottomDoodle: false, animate: c.animate, desc: `${repo.owner}/${repo.name}` }, body.join(""));
 }

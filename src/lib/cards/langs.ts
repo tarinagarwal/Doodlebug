@@ -4,7 +4,6 @@ import { frame } from "./frame";
 import { icon } from "./icons";
 import { int, list, type CommonParams } from "./params";
 import { text, truncate } from "./text";
-import { possessive } from "./stats";
 
 export function langsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): string {
   const t = c.theme;
@@ -14,7 +13,7 @@ export function langsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
   const langs = b.langs.languages.filter((l) => !hide.has(l.name.toLowerCase())).slice(0, count);
   const total = langs.reduce((a, l) => a + l.size, 0) || 1;
   const sk = new Sketch(c.seed + 23);
-  const title = c.title ?? `${possessive(b.stats.name || b.stats.login)} Top Languages`;
+  const title = c.title ?? "Top Languages";
   const titleIcon = icon(sk, "code", 0, 0, 24, t.ink);
   const body: string[] = [];
   const top = c.hideTitle ? 26 : 58;
@@ -50,7 +49,7 @@ export function langsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
     langs.forEach((l, i) => {
       const y = top + 14 + i * 22;
       body.push(sk.circle(lx, y - 5, 10, { stroke: t.ink, strokeWidth: 1.2, fill: l.color, fillStyle: "solid", roughness: 0.8, double: false }));
-      body.push(text(lx + 12, y, truncate(l.name, 96, 15), { size: 15, fill: t.ink }));
+      body.push(text(lx + 12, y, truncate(l.name, W - lx - 78, 14), { size: 14, fill: t.ink }));
       body.push(text(W - 30, y, `${Math.round((l.size / total) * 1000) / 10}%`, { size: 15, font: "title", fill: t.ink, anchor: "end" }));
     });
     return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, animate: c.animate }, body.join(""));
@@ -87,7 +86,7 @@ export function langsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
   // bars (default)
   const W = 340;
   const rowH = 30;
-  const H = top + langs.length * rowH + 16;
+  const H = top + langs.length * rowH + 26;
   const bx = 30,
     bw = W - 60;
   const max = langs[0].size;

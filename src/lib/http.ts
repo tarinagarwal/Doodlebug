@@ -57,7 +57,7 @@ export async function rateLimit(
         },
       },
     ],
-    { upsert: true, new: true },
+    { upsert: true, new: true, updatePipeline: true },
   ).lean();
   const count = doc?.count ?? 1;
   const resetAt = doc?.resetAt ? new Date(doc.resetAt) : freshReset;

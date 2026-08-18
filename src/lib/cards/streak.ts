@@ -10,14 +10,14 @@ export function streakCard(b: UserBundle, sp: URLSearchParams, c: CommonParams):
   const t = c.theme;
   const s = b.streak;
   const W = 495,
-    H = 195;
+    H = 215;
   const sk = new Sketch(c.seed + 37);
   const body: string[] = [];
   const title = c.title ?? `${possessive(b.stats.name || b.stats.login)} Streak`;
   const titleIcon = icon(sk, "fire", 0, 0, 24, t.ink);
-  const top = c.hideTitle ? 20 : 50;
+  const top = c.hideTitle ? 26 : 54;
   const colW = W / 3;
-  const midY = top + 58;
+  const midY = top + 66;
 
   // dividers
   body.push(sk.line(colW, top + 6, colW, H - 26, { stroke: t.muted, strokeWidth: 1.2, roughness: 1.6, double: false, opacity: 0.7 }));
@@ -31,13 +31,14 @@ export function streakCard(b: UserBundle, sp: URLSearchParams, c: CommonParams):
 
   // current streak with a flame ring
   const c2 = colW * 1.5;
-  const R = 44;
-  body.push(sk.circle(c2, midY - 4, R * 2, { stroke: t.accent, strokeWidth: 3.2, roughness: 1.6, fill: t.bg, fillStyle: "solid" }));
-  body.push(sk.circle(c2, midY - 4, R * 2 - 12, { stroke: t.accent2, strokeWidth: 1.2, roughness: 1.8, double: false, dash: "3 5", opacity: 0.8 }));
-  body.push(`<g transform="translate(${c2 - 11} ${midY - R - 22})">${icon(sk, "fire", 0, 0, 22, t.accent, { fill: t.accent, strokeWidth: 1.6 })}</g>`);
-  body.push(text(c2, midY + 8, fmtNum(s.currentStreak.count), { size: 40, font: "title", fill: t.ink, anchor: "middle", weight: 700 }));
-  body.push(text(c2, midY + R + 20, "Current Streak", { size: 15, fill: t.ink, anchor: "middle" }));
-  body.push(text(c2, midY + R + 40, s.currentStreak.count ? fmtRange(s.currentStreak.start, s.currentStreak.end) : "no streak yet — start today!", { size: 12.5, fill: t.muted, anchor: "middle" }));
+  const R = 40;
+  const cy = midY - 12;
+  body.push(sk.circle(c2, cy, R * 2, { stroke: t.accent, strokeWidth: 3.2, roughness: 1.6, fill: t.bg, fillStyle: "solid" }));
+  body.push(sk.circle(c2, cy, R * 2 - 12, { stroke: t.accent2, strokeWidth: 1.2, roughness: 1.8, double: false, dash: "3 5", opacity: 0.8 }));
+  body.push(`<g transform="translate(${c2 + R - 14} ${cy - R - 8})">${icon(sk, "fire", 0, 0, 22, t.accent, { fill: t.accent, strokeWidth: 1.6 })}</g>`);
+  body.push(text(c2, cy + 13, fmtNum(s.currentStreak.count), { size: 40, font: "title", fill: t.ink, anchor: "middle", weight: 700 }));
+  body.push(text(c2, cy + R + 22, "Current Streak", { size: 15, fill: t.ink, anchor: "middle" }));
+  body.push(text(c2, cy + R + 41, s.currentStreak.count ? fmtRange(s.currentStreak.start, s.currentStreak.end) : "no streak yet — start today!", { size: 12.5, fill: t.muted, anchor: "middle" }));
 
   // longest streak
   const c3 = colW * 2.5;
@@ -47,7 +48,7 @@ export function streakCard(b: UserBundle, sp: URLSearchParams, c: CommonParams):
 
   if (c.doodles) {
     body.push(sk.star(colW - 24, top + 16, 6, { stroke: t.accent, fill: t.accent, fillStyle: "solid", strokeWidth: 1.2 }));
-    body.push(sk.heart(colW * 2 + 24, H - 40, 6, { stroke: t.accent, fill: t.accent, fillStyle: "solid", strokeWidth: 1.2 }));
+    body.push(sk.heart(W - 46, H - 34, 6, { stroke: t.accent, fill: t.accent, fillStyle: "solid", strokeWidth: 1.2 }));
   }
 
   return frame({ width: W, height: H, theme: t, seed: c.seed, title, titleIcon, hideBorder: c.hideBorder, hideTitle: c.hideTitle, doodles: c.doodles, animate: c.animate }, body.join(""));

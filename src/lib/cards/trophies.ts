@@ -71,7 +71,7 @@ export function trophiesCard(b: UserBundle, sp: URLSearchParams, c: CommonParams
   });
 
   return frame(
-    { width: W, height: H, theme: t, seed: c.seed, title: hasTitle ? c.title : undefined, hideBorder: c.hideBorder, doodles: c.doodles, animate: c.animate, desc: `GitHub trophies for ${s.login}` },
+    { width: W, height: H, theme: t, seed: c.seed, title: hasTitle ? c.title : undefined, hideBorder: c.hideBorder, doodles: c.doodles, bottomDoodle: false, animate: c.animate, desc: `GitHub trophies for ${s.login}` },
     body.join(""),
   );
 }

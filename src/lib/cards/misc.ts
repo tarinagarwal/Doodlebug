@@ -66,7 +66,7 @@ export function skillsCard(sp: URLSearchParams, c: CommonParams): string {
     const rot = sk.jitter(2.5);
     parts.push(
       `<g transform="rotate(${rot.toFixed(2)} ${(x + w / 2).toFixed(1)} ${(y + tagH / 2).toFixed(1)})">` +
-        sk.roundRect(x, y, w, tagH, 8, { stroke: t.ink, strokeWidth: 1.6, fill: col, fillStyle: i % 3 === 2 ? "solid" : "hachure", hachureGap: 5, fillWeight: 1.2, roughness: 1.1, fillOpacity: i % 3 === 2 ? 0.12 : 0.55 }) +
+        sk.roundRect(x, y, w, tagH, 8, { stroke: t.ink, strokeWidth: 1.6, fill: col, fillStyle: i % 3 === 2 ? "solid" : "hachure", hachureGap: 6, fillWeight: 1.1, roughness: 1.1, fillOpacity: i % 3 === 2 ? 0.14 : 0.38 }) +
         (hasIcon ? icon(sk, iconsFor.get(s.toLowerCase())!, x + padX - 2, y + 6, 18, t.ink, { strokeWidth: 1.5 }) : "") +
         text(x + padX + (hasIcon ? 20 : 0), y + 20, s, { size, fill: t.ink }) +
         `</g>`,
