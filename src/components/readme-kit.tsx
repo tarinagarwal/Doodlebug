@@ -33,12 +33,12 @@ export function ReadmeKit({ username, theme: initialTheme, origin, name }: { use
   void t0;
 
   return (
-    <section className="mt-10">
+    <section>
       <div className="sketch-3 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="title-hand text-3xl">README starter kit</h2>
-            <p className="text-ink-soft">A ready-made block with banner, stats, streak, languages, graph, trophies and heatmap.</p>
+            <h2 className="title-hand text-3xl">One block, whole profile</h2>
+            <p className="text-ink-soft">Paste this into github.com/{username}/{username} → README.md</p>
           </div>
           <div className="flex items-center gap-2">
             <Select value={theme} onChange={(e) => setTheme(e.target.value)} className="w-44">

@@ -7,7 +7,7 @@ export async function Nav() {
   const user = await getCurrentUser();
   return (
     <header className="sticky top-0 z-40 border-b-[2.5px] border-ink bg-paper/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 md:px-6">
+      <div className="mx-auto flex max-w-[1800px] items-center justify-between gap-4 px-4 py-2.5 md:px-6">
         <Link href="/" className="flex items-center gap-2 wiggle">
           <Mascot size={44} />
           <span className="title-hand text-3xl leading-none">Doodlebug</span>
@@ -24,8 +24,8 @@ export async function Nav() {
               <Link href="/dashboard" className="btn btn-primary btn-sm">
                 <Icon name="cards" size={16} /> Dashboard
               </Link>
-              <Link href="/dashboard/settings" className="btn btn-ghost btn-sm" aria-label="Settings">
-                <Icon name="settings" size={18} />
+              <Link href="/dashboard/settings" className="btn btn-ghost btn-sm hidden sm:inline-flex" aria-label="Settings">
+                <Icon name="sliders" size={17} /> <span className="hidden md:inline">Settings</span>
               </Link>
               <LogoutButton />
             </>

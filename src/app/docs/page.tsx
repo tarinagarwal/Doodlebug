@@ -43,7 +43,7 @@ function example(type: string): string {
 export default function DocsPage() {
   const origin = appUrl();
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 md:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
       <h1 className="title-hand text-6xl">Docs</h1>
       <p className="mt-2 max-w-2xl text-lg text-ink-soft">
         Every card is a plain URL that returns an SVG. Compose it in the <Link href="/dashboard" className="underline-squiggle">builder</Link> or by hand using the params below.

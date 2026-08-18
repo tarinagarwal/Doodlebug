@@ -54,7 +54,7 @@ https://doodlebug.tarinagarwal.in/api/card/<type>?username=<login>&theme=<theme>
 
 Themes: `paper` `notebook` `grid` `sticky` `kraft` `sakura` `forest` `ocean` `candy` `chalkboard` `blueprint` `midnight` `graphite` `dracula` — or override any colour with `bg`, `ink`, `accent`, `accent2`, `muted` (hex without `#`).
 
-Every parameter is documented on the [docs page](https://doodlebug.tarinagarwal.in/docs), and the [dashboard](https://doodlebug.tarinagarwal.in/dashboard) has a live builder that writes the markdown for you.
+Every parameter is documented on the [docs page](https://doodlebug.tarinagarwal.in/docs). The [dashboard](https://doodlebug.tarinagarwal.in/dashboard) has a guided builder (sidebar of card types, quick-start presets, live preview, one-click markdown), and every design can be **saved and edited later** under *My cards*.
 
 ### Public data vs. your own token
 

@@ -64,3 +64,18 @@ RenderSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
 export type RenderDoc = InferSchemaType<typeof RenderSchema>;
 export const RenderLog: Model<RenderDoc> =
   (mongoose.models.RenderLog as Model<RenderDoc>) || mongoose.model<RenderDoc>("RenderLog", RenderSchema);
+
+/* ---------------- Saved cards (user's designs, editable later) ---------------- */
+const SavedCardSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    name: { type: String, required: true, trim: true, maxlength: 60 },
+    type: { type: String, required: true },
+    /** query-string params (without leading ?), e.g. "username=x&theme=paper&show=followers" */
+    params: { type: String, required: true, maxlength: 4000 },
+  },
+  { timestamps: true },
+);
+export type SavedCardDoc = InferSchemaType<typeof SavedCardSchema> & { _id: mongoose.Types.ObjectId };
+export const SavedCard: Model<SavedCardDoc> =
+  (mongoose.models.SavedCard as Model<SavedCardDoc>) || mongoose.model<SavedCardDoc>("SavedCard", SavedCardSchema);

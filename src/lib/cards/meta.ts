@@ -11,20 +11,32 @@ export interface ParamDoc {
   example?: string;
 }
 
+export type ControlGroup = "content" | "display" | "style";
 export type Control =
-  | { kind: "text"; key: string; label: string; placeholder?: string; hint?: string; max?: number }
-  | { kind: "number"; key: string; label: string; min: number; max: number; def: number; hint?: string }
-  | { kind: "toggle"; key: string; label: string; def: boolean; hint?: string; invert?: boolean }
-  | { kind: "select"; key: string; label: string; options: { value: string; label: string }[]; def: string; hint?: string }
-  | { kind: "multi"; key: string; label: string; options: { value: string; label: string }[]; hint?: string };
+  | { kind: "text"; key: string; label: string; placeholder?: string; hint?: string; max?: number; group?: ControlGroup; multiline?: boolean }
+  | { kind: "number"; key: string; label: string; min: number; max: number; def: number; hint?: string; group?: ControlGroup }
+  | { kind: "toggle"; key: string; label: string; def: boolean; hint?: string; invert?: boolean; group?: ControlGroup }
+  | { kind: "select"; key: string; label: string; options: { value: string; label: string }[]; def: string; hint?: string; group?: ControlGroup }
+  | { kind: "multi"; key: string; label: string; options: { value: string; label: string }[]; hint?: string; group?: ControlGroup };
+
+export interface Preset {
+  label: string;
+  /** raw query params applied on top of defaults (theme included) */
+  params: Record<string, string>;
+}
 
 export interface CardMeta {
   type: CardType;
   label: string;
   blurb: string;
+  /** one-line, plain-English "what do I do here" */
+  help: string;
+  /** icon name from components/doodles Icon */
+  icon: string;
   needsUser: boolean;
   params: ParamDoc[];
   controls: Control[];
+  presets: Preset[];
 }
 
 const COMMON_PARAMS: ParamDoc[] = [
@@ -40,11 +52,11 @@ const COMMON_PARAMS: ParamDoc[] = [
 ];
 
 const COMMON_CONTROLS: Control[] = [
-  { kind: "text", key: "title", label: "Custom title", placeholder: "leave empty for default", max: 60 },
-  { kind: "toggle", key: "hide_title", label: "Hide title", def: false },
-  { kind: "toggle", key: "hide_border", label: "Hide border", def: false },
-  { kind: "toggle", key: "doodles", label: "Decorative doodles", def: true, invert: true },
-  { kind: "toggle", key: "animate", label: "Fade-in animation", def: true, invert: true },
+  { kind: "text", key: "title", label: "Custom title", placeholder: "leave empty for the default", max: 60, group: "style" },
+  { kind: "toggle", key: "hide_title", label: "Hide title", def: false, group: "style" },
+  { kind: "toggle", key: "hide_border", label: "Hide border", def: false, group: "style" },
+  { kind: "toggle", key: "doodles", label: "Decorative doodles", def: true, invert: true, group: "style" },
+  { kind: "toggle", key: "animate", label: "Fade-in animation", def: true, invert: true, group: "style" },
 ];
 
 export const CARD_META: CardMeta[] = [
@@ -52,6 +64,9 @@ export const CARD_META: CardMeta[] = [
     type: "stats",
     label: "Stats",
     blurb: "Stars, commits, PRs, issues and a hand-drawn rank ring.",
+    help: "Your headline numbers. Nothing to fill in — just pick a look.",
+    icon: "graph",
+    presets: [{ label: "Classic", params: {} }, { label: "Everything", params: { show: "merged,reviews,followers,repos,forks" } }, { label: "Minimal", params: { hide_rank: "true", show_icons: "false", doodles: "false" } }, { label: "Dark board", params: { theme: "chalkboard", show: "followers" } }],
     needsUser: true,
     params: [
       { name: "hide", desc: "Comma list: stars, commits, prs, issues, contribs" },
@@ -96,6 +111,9 @@ export const CARD_META: CardMeta[] = [
     type: "langs",
     label: "Top languages",
     blurb: "Your most used languages as sketched bars, a donut, a pie or a compact strip.",
+    help: "Auto-detected from your repos. Choose bars, donut, pie or compact.",
+    icon: "code",
+    presets: [{ label: "Bars", params: {} }, { label: "Donut", params: { layout: "donut", theme: "notebook" } }, { label: "Pie", params: { layout: "pie", theme: "sakura" } }, { label: "Compact strip", params: { layout: "compact", langs_count: "8" } }],
     needsUser: true,
     params: [
       { name: "layout", desc: "bars (default), donut, pie, compact" },
@@ -125,6 +143,9 @@ export const CARD_META: CardMeta[] = [
     type: "streak",
     label: "Streak",
     blurb: "Total contributions, current streak in a flame ring, and longest streak.",
+    help: "Contribution streaks. Nothing to fill in.",
+    icon: "bolt",
+    presets: [{ label: "Sticky note", params: { theme: "sticky" } }, { label: "Paper", params: {} }, { label: "Midnight", params: { theme: "midnight" } }],
     needsUser: true,
     params: [...COMMON_PARAMS],
     controls: [...COMMON_CONTROLS],
@@ -133,6 +154,9 @@ export const CARD_META: CardMeta[] = [
     type: "activity",
     label: "Contribution doodle",
     blurb: "A wobbly heatmap of your recent contributions.",
+    help: "A wobbly heatmap of your recent contributions.",
+    icon: "cards",
+    presets: [{ label: "Half year", params: { weeks: "26", theme: "grid" } }, { label: "Full year", params: { weeks: "52" } }, { label: "Last 3 months", params: { weeks: "13", theme: "forest" } }],
     needsUser: true,
     params: [{ name: "weeks", desc: "8–53 weeks to show", example: "40" }, { name: "legend", desc: "false to hide the less/more legend" }, ...COMMON_PARAMS],
     controls: [{ kind: "number", key: "weeks", label: "Weeks", min: 8, max: 53, def: 30 }, { kind: "toggle", key: "legend", label: "Legend", def: true, invert: true }, ...COMMON_CONTROLS],
@@ -141,6 +165,9 @@ export const CARD_META: CardMeta[] = [
     type: "graph",
     label: "Activity graph",
     blurb: "A hand-drawn line chart of daily contributions.",
+    help: "Daily contributions as a sketched line chart.",
+    icon: "graph",
+    presets: [{ label: "30 days", params: {} }, { label: "60 days · midnight", params: { days: "60", theme: "midnight" } }, { label: "90 days · ocean", params: { days: "90", theme: "ocean" } }],
     needsUser: true,
     params: [{ name: "days", desc: "7–120 days", example: "60" }, ...COMMON_PARAMS],
     controls: [{ kind: "number", key: "days", label: "Days", min: 7, max: 120, def: 30 }, ...COMMON_CONTROLS],
@@ -149,6 +176,9 @@ export const CARD_META: CardMeta[] = [
     type: "trophies",
     label: "Trophies",
     blurb: "Sketched shields ranked C → SS for stars, commits, PRs, streaks…",
+    help: "Auto-ranked shields — hide the ones you do not want.",
+    icon: "check",
+    presets: [{ label: "All 7", params: {} }, { label: "Chalkboard", params: { theme: "chalkboard" } }, { label: "Top 4", params: { hide: "issues,followers,repos", columns: "4" } }],
     needsUser: true,
     params: [
       { name: "columns", desc: "1–9 shields per row" },
@@ -190,6 +220,9 @@ export const CARD_META: CardMeta[] = [
     type: "repo",
     label: "Repo pin",
     blurb: "Pin any repository: description, language, stars, forks, topics.",
+    help: "Type a repository name from the account above.",
+    icon: "book",
+    presets: [{ label: "Paper", params: {} }, { label: "Sakura", params: { theme: "sakura" } }, { label: "With owner", params: { show_owner: "true", theme: "kraft" } }],
     needsUser: true,
     params: [{ name: "repo", desc: "Repository name (required)", example: "my-project" }, { name: "show_owner", desc: "Prefix owner/" }, ...COMMON_PARAMS.filter((p) => !["title", "hide_title"].includes(p.name))],
     controls: [
@@ -202,6 +235,9 @@ export const CARD_META: CardMeta[] = [
     type: "banner",
     label: "Banner",
     blurb: "A wide hand-drawn header for the top of your README.",
+    help: "A big header for the top of your README. Add your name and a tagline.",
+    icon: "cards",
+    presets: [{ label: "Centered", params: {} }, { label: "Left aligned", params: { align: "left" } }, { label: "No mascot", params: { mascot: "false", icons: "code,star,rocket,heart" } }, { label: "Chalkboard", params: { theme: "chalkboard" } }],
     needsUser: false,
     params: [
       { name: "name", desc: "Big text (defaults to your GitHub name)" },
@@ -230,6 +266,9 @@ export const CARD_META: CardMeta[] = [
     type: "skills",
     label: "Skill stickers",
     blurb: "Your stack as sketched stickers — no GitHub data required.",
+    help: "List your stack, comma separated. Optional icons per skill.",
+    icon: "bolt",
+    presets: [{ label: "Web dev", params: { skills: "TypeScript,React,Next.js,Node.js,PostgreSQL,Docker,AWS" } }, { label: "Data / ML", params: { skills: "Python,PyTorch,Pandas,SQL,Spark,Airflow,MLflow", theme: "notebook" } }, { label: "Mobile", params: { skills: "Kotlin,Swift,Flutter,React Native,Firebase", theme: "candy" } }],
     needsUser: false,
     params: [
       { name: "skills", desc: "Comma list", example: "TypeScript,React,Go" },
@@ -250,6 +289,9 @@ export const CARD_META: CardMeta[] = [
     type: "note",
     label: "Sticky note",
     blurb: "A taped note with handwritten text. Great for a hello or a quote.",
+    help: "Write anything — a hello, a quote, a status update.",
+    icon: "mail",
+    presets: [{ label: "Sticky", params: { theme: "sticky" } }, { label: "Big Caveat", params: { font: "title", size: "26" } }, { label: "Kalam", params: { font: "kalam", theme: "kraft" } }],
     needsUser: false,
     params: [
       { name: "text", desc: "Note text (required)" },
@@ -260,7 +302,7 @@ export const CARD_META: CardMeta[] = [
       ...COMMON_PARAMS.filter((p) => !["title", "hide_title"].includes(p.name)),
     ],
     controls: [
-      { kind: "text", key: "text", label: "Text", placeholder: "Hi! I build things and break them.", max: 400 },
+      { kind: "text", key: "text", label: "Text", placeholder: "Hi! I build things and break them.", max: 400, multiline: true },
       { kind: "text", key: "author", label: "Signed", placeholder: "— you", max: 40 },
       { kind: "number", key: "size", label: "Font size", min: 12, max: 36, def: 18 },
       { kind: "select", key: "font", label: "Font", def: "hand", options: [{ value: "hand", label: "Patrick Hand" }, { value: "title", label: "Caveat" }, { value: "kalam", label: "Kalam" }] },
@@ -274,6 +316,9 @@ export const CARD_META: CardMeta[] = [
     type: "project",
     label: "Project",
     blurb: "Your own title, description, tags and link — optionally merged with live repo stats.",
+    help: "Describe a project in your own words. Add tags, a link and an optional ribbon.",
+    icon: "cards",
+    presets: [{ label: "Product", params: { icon: "rocket" } }, { label: "Open source", params: { icon: "code", theme: "notebook" } }, { label: "Game", params: { icon: "bolt", theme: "graphite" } }],
     needsUser: false,
     params: [
       { name: "name", desc: "Project title" },
@@ -289,7 +334,7 @@ export const CARD_META: CardMeta[] = [
     ],
     controls: [
       { kind: "text", key: "name", label: "Title", placeholder: "My project", max: 50 },
-      { kind: "text", key: "desc", label: "Description", placeholder: "What it is, what it does, why it matters", max: 400 },
+      { kind: "text", key: "desc", label: "Description", placeholder: "What it is, what it does, why it matters", max: 400, multiline: true },
       { kind: "text", key: "tags", label: "Tags", placeholder: "Node.js,TypeScript,MongoDB", hint: "comma separated" },
       { kind: "text", key: "link", label: "Link", placeholder: "https://...", max: 80 },
       { kind: "text", key: "badge", label: "Ribbon badge", placeholder: "e.g. #36 Product of the Day", max: 40 },
@@ -305,6 +350,9 @@ export const CARD_META: CardMeta[] = [
     type: "achievements",
     label: "Achievements",
     blurb: "Hackathon wins, awards, certifications — as numbered hand-drawn medals.",
+    help: "One achievement per line as Label: detail (Winner, Runner-up, Top 100, 3rd place...).",
+    icon: "check",
+    presets: [{ label: "Paper", params: {} }, { label: "Chalkboard", params: { theme: "chalkboard" } }, { label: "Wide", params: { width: "760" } }],
     needsUser: false,
     params: [
       { name: "items", desc: "Semicolon-separated list. Write each item as Label: detail — the medal colour follows the label (winner, runner-up, 3rd, top...)", example: "Winner: Buildverse 2025;Top 100: Hackhazards" },
@@ -312,7 +360,7 @@ export const CARD_META: CardMeta[] = [
       ...COMMON_PARAMS,
     ],
     controls: [
-      { kind: "text", key: "items", label: "Items", placeholder: "Winner: Buildverse 2025;Runner-up: GameForge 2025;Top 100: Hackhazards 2025", hint: "separate items with ; and write Label: detail", max: 1200 },
+      { kind: "text", key: "items", label: "Achievements", placeholder: "Winner: Buildverse 2025\nRunner-up: GameForge 2025\nTop 100: Hackhazards 2025", hint: "one per line, written as Label: detail", max: 1200, multiline: true },
       { kind: "number", key: "width", label: "Width", min: 300, max: 900, def: 495 },
       ...COMMON_CONTROLS,
     ],
@@ -321,6 +369,9 @@ export const CARD_META: CardMeta[] = [
     type: "link",
     label: "Link sticker",
     blurb: "A hand-drawn button for portfolio, LinkedIn, email... wrap it in a link in your README.",
+    help: "A hand-drawn button. Wrap the image in a link when you paste it.",
+    icon: "external",
+    presets: [{ label: "Portfolio", params: { label: "Portfolio", icon: "globe" } }, { label: "LinkedIn", params: { label: "LinkedIn", icon: "linkedin", theme: "ocean" } }, { label: "Email", params: { label: "Email", icon: "mail", theme: "sakura" } }, { label: "Resume", params: { label: "Resume", icon: "doc", style: "outline" } }],
     needsUser: false,
     params: [
       { name: "label", desc: "Button text", example: "Portfolio" },

@@ -9,11 +9,11 @@ export const metadata: Metadata = { title: "Settings" };
 export default async function SettingsPage() {
   const user = toPublicUser((await getCurrentUser())!);
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="title-hand text-5xl">Settings</h1>
         <Link href="/dashboard" className="btn btn-sm">
-          <Icon name="cards" size={16} /> Back to builder
+          <Icon name="cards" size={16} /> Builder
         </Link>
       </div>
       <div className="space-y-6">

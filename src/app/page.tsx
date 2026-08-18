@@ -10,7 +10,7 @@ export default async function Home() {
   const user = await getCurrentUser();
   const cta = user ? "/dashboard" : "/signup";
   return (
-    <div className="mx-auto max-w-6xl px-4 md:px-6">
+    <div className="mx-auto max-w-7xl px-4 md:px-6">
       {/* ---------------- Hero ---------------- */}
       <section className="relative grid items-center gap-10 py-14 md:grid-cols-2 md:py-20">
         <Sparkle className="absolute left-2 top-8 rotate-12" size={30} />
@@ -89,7 +89,7 @@ export default async function Home() {
         </div>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <Step n={1} title="Sign up (30 seconds)" body="Email + password, verify your inbox, done. Your account is where you save your GitHub username and, optionally, a token." />
-          <Step n={2} title="Pick a card, tweak the look" body="Choose a card type, theme and options in the builder. The preview updates live — it's the same SVG GitHub will render." />
+          <Step n={2} title="Pick a card, tweak the look" body="Choose a card in the sidebar, hit a quick-start preset or tweak the options. The preview updates live — it's the same SVG GitHub will render. Save it to edit later." />
           <Step n={3} title="Copy the markdown" body="Paste the snippet into your profile README. Cards refresh themselves every ~30 minutes with fresh data." />
         </div>
       </section>
@@ -127,6 +127,10 @@ export default async function Home() {
             <p className="mt-2 text-ink-soft">Optional. Stored AES-256-GCM encrypted, only ever decrypted in memory to fetch your data. Unlocks private-contribution counts and dodges GitHub&apos;s public rate limits.</p>
           </div>
           <div className="sketch-2 p-5 bg-[#cfe9e5]">
+            <h3 className="title-hand text-2xl">Save &amp; edit later</h3>
+            <p className="mt-2 text-ink-soft">Every design you build can be saved to your dashboard — come back, tweak the wording or theme, and copy the updated markdown.</p>
+          </div>
+          <div className="sketch-3 p-5 bg-[#cfe9e5]">
             <h3 className="title-hand text-2xl">Cached &amp; cheap</h3>
             <p className="mt-2 text-ink-soft">Data is cached for 30–60 minutes and served with proper cache headers, so your README loads instantly and GitHub is not hammered.</p>
           </div>
