@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Arrow, Cloud, Heart, Icon, Mascot, Sparkle, Squiggle, Star, Underline } from "@/components/doodles";
+import { Arrow, Cloud, Heart, Icon, Sparkle, Squiggle, Star, Underline } from "@/components/doodles";
 import { CARD_META } from "@/lib/cards";
 import { THEMES } from "@/lib/cards/theme";
 import { getCurrentUser } from "@/lib/auth";
@@ -48,8 +48,9 @@ export default async function Home() {
           <div className="relative -mt-6 ml-8 w-4/5 -rotate-2 sketch p-2 tape tape-left">
             <img src={`/api/card/streak?username=${DEMO_USER}&theme=sticky`} alt="Example hand-drawn streak card" width={495} height={195} className="h-auto w-full" />
           </div>
-          <div className="absolute -bottom-10 -left-8 float hidden md:block">
-            <Mascot size={120} />
+          <div className="absolute -bottom-14 -left-10 float hidden md:block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/art/mascot.webp" alt="Doodlebug mascot" width={150} height={156} className="h-auto w-[150px] drop-shadow-[3px_4px_0_rgba(43,43,43,0.25)]" />
           </div>
           <Arrow className="absolute -left-20 top-16 hidden lg:block" />
         </div>
@@ -76,7 +77,14 @@ export default async function Home() {
 
       {/* ---------------- How it works ---------------- */}
       <section className="py-14">
-        <h2 className="title-hand text-4xl md:text-5xl">How it works</h2>
+        <div className="grid items-center gap-8 md:grid-cols-[1fr_320px]">
+          <div>
+            <h2 className="title-hand text-4xl md:text-5xl">How it works</h2>
+            <p className="mt-2 max-w-xl text-lg text-ink-soft">No OAuth dance, no build step, no config files in your repo. Just a URL that draws itself.</p>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/art/hero.webp" alt="Doodle of a laptop with charts, a rocket, a trophy and a coffee mug" width={1200} height={812} className="mx-auto h-auto w-full max-w-[320px] rotate-2" loading="lazy" />
+        </div>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <Step n={1} title="Sign up (30 seconds)" body="Email + password, verify your inbox, done. Your account is where you save your GitHub username and, optionally, a token." />
           <Step n={2} title="Pick a card, tweak the look" body="Choose a card type, theme and options in the builder. The preview updates live — it's the same SVG GitHub will render." />
@@ -150,7 +158,8 @@ export default async function Home() {
         <div className="relative mx-auto max-w-2xl sketch-2 bg-[#fffdf7] p-8 md:p-12">
           <Heart className="absolute -right-3 -top-3" size={34} />
           <Sparkle className="absolute -left-4 bottom-4" size={30} color="#2a9d8f" />
-          <Mascot size={90} className="mx-auto" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/art/mascot.webp" alt="" width={120} height={124} className="mx-auto h-auto w-[120px] float" />
           <h2 className="title-hand mt-2 text-5xl">Ready to doodle?</h2>
           <p className="mt-2 text-lg text-ink-soft">Takes less time than choosing a README emoji.</p>
           <div className="mt-6 flex justify-center gap-3">

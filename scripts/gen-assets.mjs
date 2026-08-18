@@ -20,13 +20,19 @@ const ASSETS = [
     name: "mascot",
     size: "1024x1024",
     background: "transparent",
-    prompt: `${STYLE} A cute friendly cartoon ladybug-beetle mascot character named Doodlebug, big curious eyes, tiny antennae, holding a pencil, drawn as a single sticker-like doodle centered on a transparent background, thick outline.`,
+    prompt: `${STYLE} A cute friendly cartoon ladybug-beetle mascot character named Doodlebug: round yellow-orange shell with black spots, big curious eyes, tiny antennae with little balls on the ends, holding a pencil in one arm, smiling. Drawn as a single sticker-like doodle centered on a transparent background, thick outline, no shadow.`,
   },
   {
     name: "hero",
     size: "1536x1024",
-    background: "opaque",
-    prompt: `${STYLE} A wide sketchbook scene: a hand-drawn laptop showing a wobbly bar chart and a line graph, floating doodle stickers around it (a star, a git branch fork symbol, a tiny rocket, a coffee mug, a trophy, a heart), light dashed arrows connecting them, lots of white space, feels like a fun engineer's notebook page.`,
+    background: "transparent",
+    prompt: `${STYLE} A wide sketchbook scene on a transparent background: a hand-drawn open laptop showing a wobbly bar chart and a line graph, floating doodle stickers around it (a star, a git branch fork symbol, a tiny rocket, a coffee mug, a trophy, a heart), light dashed arrows connecting them, generous empty space, feels like a fun engineer's notebook page.`,
+  },
+  {
+    name: "auth",
+    size: "1024x1024",
+    background: "transparent",
+    prompt: `${STYLE} A friendly doodle of the same cute ladybug-beetle mascot sitting at a tiny desk writing in a notebook, a big hand-drawn key and a padlock floating beside it, an envelope with a heart flying overhead, small sparkles, sticker style on a transparent background.`,
   },
   {
     name: "empty",
@@ -35,10 +41,10 @@ const ASSETS = [
     prompt: `${STYLE} A small doodle of an open blank spiral notebook with a pencil resting on it and three little sparkles above, sticker style on transparent background.`,
   },
   {
-    name: "banner-tarin",
-    size: "1536x1024",
-    background: "opaque",
-    prompt: `${STYLE} A wide banner-shaped doodle collage for a software engineer: a laptop with code brackets, a cute cat wearing glasses reviewing paper documents, a game controller, a small chain of linked blocks, a rocket, a graduation cap, a coffee cup, stars and sparkles scattered, all as loose ink doodles with a little yellow and teal marker fill, generous white space in the center for a title to be added later.`,
+    name: "notfound",
+    size: "1024x1024",
+    background: "transparent",
+    prompt: `${STYLE} The cute ladybug-beetle mascot looking puzzled while holding a big eraser, with a torn-out notebook page and a question mark doodle floating above, sticker style on transparent background.`,
   },
 ];
 

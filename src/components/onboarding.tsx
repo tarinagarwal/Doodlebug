@@ -35,6 +35,8 @@ export function Onboarding({ name }: { name: string }) {
   return (
     <div className="mx-auto max-w-xl">
       <div className="sketch-2 tape relative p-6 md:p-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/art/empty.webp" alt="" width={140} height={150} className="float absolute -right-6 -top-10 hidden h-auto w-[140px] md:block" />
         <h1 className="title-hand text-4xl">Hi {name.split(" ")[0]}! Let&apos;s connect GitHub.</h1>
         <p className="mt-2 text-ink-soft">Tell Doodlebug which GitHub account to draw. A token is optional — public data works fine.</p>
         {error ? <Alert kind="error" className="mt-4">{error}</Alert> : null}
