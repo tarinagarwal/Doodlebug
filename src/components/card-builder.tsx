@@ -70,10 +70,10 @@ export function CardBuilder({ username: initialUser, defaultTheme, origin, hasTo
 
   const url = useMemo(() => buildUrl(origin, type, username.trim(), theme, values, colors, grid, seed), [origin, type, username, theme, values, colors, grid, seed]);
   // debounce the preview so typing does not spam requests
-  const [previewUrl, setPreviewUrl] = useState(url);
+  const [previewUrl, setPreviewUrl] = useState(url.replace(origin, ""));
   useEffect(() => {
     const t = setTimeout(() => {
-      setPreviewUrl(url);
+      setPreviewUrl(url.replace(origin, "")); // relative: works in dev + prod regardless of APP_URL
       setLoading(true);
     }, 450);
     return () => clearTimeout(t);

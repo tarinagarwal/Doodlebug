@@ -72,7 +72,10 @@ export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { t
     }
   } catch (e) {
     const ge = e instanceof GitHubError ? e : null;
-    if (ge?.kind === "not_found") return { svg: errorCard(theme, "User not found", `GitHub doesn't know "${login}"`, "Check the spelling of ?username="), cacheSeconds: 300, ok: false, username: login };
+    if (ge?.kind === "not_found") {
+      if (type === "repo") return { svg: errorCard(theme, "Repo not found", `No public repo "${login}/${sp.get("repo")}"`, "Check the spelling of &repo="), cacheSeconds: 300, ok: false, username: login };
+      return { svg: errorCard(theme, "User not found", `GitHub doesn't know "${login}"`, "Check the spelling of ?username="), cacheSeconds: 300, ok: false, username: login };
+    }
     if (ge?.kind === "rate_limited") return { svg: errorCard(theme, "Rate limited", "GitHub is throttling public requests right now", "Log in to Doodlebug and add a token to fix this for good"), cacheSeconds: 120, ok: false, username: login };
     if (ge?.kind === "unauthorized") return { svg: errorCard(theme, "Token trouble", "The saved GitHub token was rejected", "Update it in your Doodlebug settings"), cacheSeconds: 120, ok: false, username: login };
     console.error("[card]", type, login, e);

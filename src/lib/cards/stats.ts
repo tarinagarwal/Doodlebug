@@ -71,8 +71,8 @@ export function statsCard(b: UserBundle, sp: URLSearchParams, c: CommonParams): 
     const start = -Math.PI / 2;
     const stop = start + Math.PI * 2 * pct;
     body.push(sk.arc(cx, cy, R * 2 - 12, R * 2 - 12, start, stop, false, { stroke: t.accent, strokeWidth: 6, roughness: 1.4, double: false, opacity: 0.9 }));
-    body.push(text(cx, cy + 12, s.rank.level, { size: 40, font: "title", fill: t.ink, anchor: "middle", weight: 700 }));
-    body.push(text(cx, cy + R + 22, `top ${Math.max(1, Math.round(s.rank.percentile))}%`, { size: 13, fill: t.muted, anchor: "middle" }));
+    body.push(text(cx, cy + 6, s.rank.level, { size: 36, font: "title", fill: t.ink, anchor: "middle", weight: 700 }));
+    body.push(text(cx, cy + 24, `top ${Math.max(1, Math.round(s.rank.percentile))}%`, { size: 12, fill: t.muted, anchor: "middle" }));
     if (c.doodles) {
       body.push(sk.sparkle(cx + R + 4, cy - R + 6, 4, t.accent2));
       body.push(sk.star(cx - R - 6, cy + R - 4, 5, { stroke: t.accent, fill: t.accent, fillStyle: "solid", strokeWidth: 1.2 }));
