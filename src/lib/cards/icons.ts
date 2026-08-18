@@ -37,6 +37,19 @@ export const ICONS: Record<string, string> = {
   mail: "M3 6 H21 V18 H3 Z M3 6 L12 13 L21 6",
   hash: "M9 3 L7 21 M17 3 L15 21 M4 9 H21 M3 15 H20",
   smile: "M12 3 a9 9 0 1 0 0.01 0 M8.5 10 v0.3 M15.5 10 v0.3 M8 14.5 C9.5 16.5 14.5 16.5 16 14.5",
+  external: "M14 4 H20 V10 M20 4 L11 13 M18 14 V20 H4 V6 H10",
+  link: "M10 14 a4 4 0 0 0 5.6 0 l3 -3 a4 4 0 0 0 -5.6 -5.6 l-1.5 1.5 M14 10 a4 4 0 0 0 -5.6 0 l-3 3 a4 4 0 0 0 5.6 5.6 l1.5 -1.5",
+  linkedin: "M4 4 H20 V20 H4 Z M8 10.5 V17 M8 7.2 v0.2 M12 17 V10.5 M12 13.5 C12 11 16.5 11 16.5 13.5 V17",
+  x: "M5 4 L19 20 M19 4 L5 20",
+  instagram: "M4 4 H20 V20 H4 Z M12 8 a4 4 0 1 0 0.01 0 M17 7 v0.2",
+  youtube: "M3 7 C3 5 4.5 4.5 12 4.5 C19.5 4.5 21 5 21 7 V17 C21 19 19.5 19.5 12 19.5 C4.5 19.5 3 19 3 17 Z M10 9 L15 12 L10 15 Z",
+  briefcase: "M3 8 H21 V20 H3 Z M9 8 V5 H15 V8 M3 13 H21",
+  doc: "M6 3 H14 L18 7 V21 H6 Z M14 3 V7 H18 M9 12 h6 M9 15 h6 M9 18 h4",
+  phone: "M7 3 H17 V21 H7 Z M11 18 h2",
+  discord: "M8 5 C10.5 4 13.5 4 16 5 L18 9 C19 12 19 15 18 18 L14 19.5 L13 17.5 H11 L10 19.5 L6 18 C5 15 5 12 6 9 Z M9.5 13 a1 1 0 1 0 0.01 0 M14.5 13 a1 1 0 1 0 0.01 0",
+  medium: "M4 6 H20 V18 H4 Z M8 9 L12 15 L16 9",
+  dev: "M4 6 H20 V18 H4 Z M8 9 V15 C10 15 10.5 9 8 9 Z M13 9 L14.5 15 L16 9",
+  npm: "M3 7 H21 V17 H3 Z M7 10 V14 M11 10 V14 M15 10 V14 M11 12 H15",
 };
 
 export type IconKey = keyof typeof ICONS;

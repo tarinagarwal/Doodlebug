@@ -2,6 +2,7 @@ import { GitHubError } from "../github/client";
 import { getBundle, getRepo, normalizeLogin } from "../github/service";
 import { activityCard, graphCard } from "./activity";
 import { bannerCard } from "./banner";
+import { achievementsCard, linkCard, projectCard } from "./custom";
 import { errorCard } from "./frame";
 import { langsCard } from "./langs";
 import { noteCard, skillsCard } from "./misc";
@@ -34,6 +35,21 @@ export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { t
   // data-free cards
   if (type === "note") return { svg: noteCard(sp, commonParams(sp, "note:" + (sp.get("text") ?? ""))), cacheSeconds: 86400, ok: true, username: null };
   if (type === "skills") return { svg: skillsCard(sp, commonParams(sp, "skills:" + (sp.get("skills") ?? ""))), cacheSeconds: 86400, ok: true, username: null };
+  if (type === "link") return { svg: linkCard(sp, commonParams(sp, "link:" + (sp.get("label") ?? ""))), cacheSeconds: 86400, ok: true, username: null };
+  if (type === "achievements") return { svg: achievementsCard(sp, commonParams(sp, "ach:" + (sp.get("items") ?? ""))), cacheSeconds: 86400, ok: true, username: null };
+  if (type === "project") {
+    const c0 = commonParams(sp, "project:" + (sp.get("name") ?? ""));
+    const repoName = (sp.get("repo") || "").trim();
+    if (login && /^[A-Za-z0-9_.-]{1,100}$/.test(repoName)) {
+      try {
+        const repo = await getRepo(login, repoName);
+        return { svg: projectCard(repo, sp, c0), cacheSeconds: 3600, ok: true, username: login };
+      } catch {
+        /* fall through to a data-free card */
+      }
+    }
+    return { svg: projectCard(null, sp, c0), cacheSeconds: 86400, ok: true, username: login };
+  }
   if (type === "banner" && !login) return { svg: bannerCard(null, sp, commonParams(sp, "banner:" + (sp.get("name") ?? ""))), cacheSeconds: 86400, ok: true, username: null };
 
   if (!login) {

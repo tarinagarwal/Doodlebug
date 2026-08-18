@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon, Sparkle, Squiggle, Star } from "@/components/doodles";
 
 const PERKS = [
-  { icon: "cards", title: "10 hand-drawn card types", body: "Stats, streaks, languages, trophies, heatmaps, banners, stickers…" },
+  { icon: "cards", title: "13 hand-drawn card types", body: "Stats, streaks, languages, trophies, heatmaps, banners, projects, achievements…" },
   { icon: "palette", title: "14 themes + your own colours", body: "Paper, notebook, chalkboard, blueprint — or override any hex." },
   { icon: "key", title: "Optional GitHub token", body: "Encrypted at rest. Unlocks private-contribution counts and no rate limits." },
   { icon: "bolt", title: "Live builder → copy markdown", body: "Preview is the exact SVG GitHub renders. Cards refresh themselves." },

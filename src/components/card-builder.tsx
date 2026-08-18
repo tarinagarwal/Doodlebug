@@ -33,7 +33,7 @@ function initialValues(type: CardType): Values {
 export function buildUrl(origin: string, type: CardType, username: string, theme: string, values: Values, colors: Record<string, string>, grid: string, seed: string): string {
   const meta = CARD_META.find((m) => m.type === type)!;
   const sp = new URLSearchParams();
-  if (meta.needsUser || (type === "banner" && username)) sp.set("username", username);
+  if (meta.needsUser || ((type === "banner" || type === "project") && username)) sp.set("username", username);
   if (theme && theme !== "paper") sp.set("theme", theme);
   for (const c of meta.controls) {
     const val = values[c.key];
@@ -113,7 +113,7 @@ export function CardBuilder({ username: initialUser, defaultTheme, origin, hasTo
         </div>
 
         <div className="sketch-2 p-4">
-          {(meta.needsUser || type === "banner") && (
+          {(meta.needsUser || type === "banner" || type === "project") && (
             <Field label="GitHub username" hint={hasToken && username.trim().toLowerCase() === initialUser.toLowerCase() ? "Using your saved token ✓" : "Public data (no token)"}>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="octocat" spellCheck={false} />
             </Field>

@@ -17,6 +17,12 @@ function example(type: string): string {
       return `/api/card/banner?username=${DEMO}&theme=paper&text=full-stack%20dev%20%C2%B7%20game%20dev`;
     case "skills":
       return `/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Docker&theme=kraft`;
+    case "project":
+      return `/api/card/project?name=LGTM%20%E2%80%94%20Looks%20Good%20To%20Meow&desc=Live%20AI%20code%20review%20%2B%20CI%2FCD%20security%20SaaS%3A%206-lens%20review%20pipeline%2C%2036%20security%20detectors%2C%20SBOM%2C%20posture%20analytics%2C%20org%20RBAC%20and%20a%20CLI.&tags=Node.js,TypeScript,React,MongoDB,Redis,Fly.io&link=looksgoodtomeow.in&badge=%2336%20Product%20of%20the%20Day&icon=cat&theme=forest`;
+    case "achievements":
+      return `/api/card/achievements?items=Winner:%20Gameathon%202K26%20(TECHNEX)%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants);3rd%20place:%20Hackman%20V8%20DSCE&theme=paper`;
+    case "link":
+      return `/api/card/link?label=Portfolio&sub=tarinagarwal.in&icon=globe&theme=paper`;
     case "note":
       return `/api/card/note?text=Hi!%20I%20build%20things%20and%20occasionally%20break%20them.&author=${DEMO}&theme=sticky`;
     case "langs":

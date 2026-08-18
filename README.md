@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://doodle-bug.vercel.app/api/card/banner?name=Doodlebug&text=Hand-drawn%20GitHub%20stats%20cards%20for%20your%20README&subtitle=stats%20%C2%B7%20streaks%20%C2%B7%20languages%20%C2%B7%20trophies%20%C2%B7%20banners&icons=code,star,heart,rocket,coffee,fire,sparkle,bolt&theme=paper" alt="Doodlebug" width="100%"/>
+<img src="https://doodlebug.tarinagarwal.in/api/card/banner?name=Doodlebug&text=Hand-drawn%20GitHub%20stats%20cards%20for%20your%20README&subtitle=stats%20%C2%B7%20streaks%20%C2%B7%20languages%20%C2%B7%20trophies%20%C2%B7%20banners&icons=code,star,heart,rocket,coffee,fire,sparkle,bolt&theme=paper" alt="Doodlebug" width="100%"/>
 
-**[doodle-bug.vercel.app](https://doodle-bug.vercel.app)** · [Docs](https://doodle-bug.vercel.app/docs) · [Report a bug](https://github.com/tarinagarwal/Doodlebug/issues)
+**[doodlebug.tarinagarwal.in](https://doodlebug.tarinagarwal.in)** · [Docs](https://doodlebug.tarinagarwal.in/docs) · [Report a bug](https://github.com/tarinagarwal/Doodlebug/issues)
 
 Doodlebug turns your GitHub activity into **hand-drawn SVG cards** — every stroke is generated with [rough.js](https://roughjs.com) and a per-user seed, with real handwriting fonts embedded, so cards render anywhere (including GitHub READMEs) and no two look exactly alike.
 
@@ -12,13 +12,19 @@ Doodlebug turns your GitHub activity into **hand-drawn SVG cards** — every str
 
 | | |
 |---|---|
-| <img src="https://doodle-bug.vercel.app/api/card/stats?username=tarinagarwal&show=followers" alt="stats"/> | <img src="https://doodle-bug.vercel.app/api/card/streak?username=tarinagarwal&theme=sticky" alt="streak"/> |
-| <img src="https://doodle-bug.vercel.app/api/card/langs?username=tarinagarwal&theme=notebook&layout=donut" alt="languages"/> | <img src="https://doodle-bug.vercel.app/api/card/graph?username=tarinagarwal&theme=midnight&days=45" alt="graph"/> |
-| <img src="https://doodle-bug.vercel.app/api/card/repo?username=tarinagarwal&repo=Doodlebug&theme=sakura" alt="repo"/> | <img src="https://doodle-bug.vercel.app/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Redis,Docker&theme=kraft" alt="skills"/> |
+| <img src="https://doodlebug.tarinagarwal.in/api/card/stats?username=tarinagarwal&show=followers" alt="stats"/> | <img src="https://doodlebug.tarinagarwal.in/api/card/streak?username=tarinagarwal&theme=sticky" alt="streak"/> |
+| <img src="https://doodlebug.tarinagarwal.in/api/card/langs?username=tarinagarwal&theme=notebook&layout=donut" alt="languages"/> | <img src="https://doodlebug.tarinagarwal.in/api/card/graph?username=tarinagarwal&theme=midnight&days=45" alt="graph"/> |
+| <img src="https://doodlebug.tarinagarwal.in/api/card/repo?username=tarinagarwal&repo=Doodlebug&theme=sakura" alt="repo"/> | <img src="https://doodlebug.tarinagarwal.in/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Redis,Docker&theme=kraft" alt="skills"/> |
 
-<img src="https://doodle-bug.vercel.app/api/card/trophies?username=tarinagarwal&theme=chalkboard" alt="trophies"/>
+<img src="https://doodlebug.tarinagarwal.in/api/card/trophies?username=tarinagarwal&theme=chalkboard" alt="trophies"/>
 
-<img src="https://doodle-bug.vercel.app/api/card/activity?username=tarinagarwal&theme=grid&weeks=40" alt="activity"/>
+<img src="https://doodlebug.tarinagarwal.in/api/card/activity?username=tarinagarwal&theme=grid&weeks=40" alt="activity"/>
+
+| | |
+|---|---|
+| <img src="https://doodlebug.tarinagarwal.in/api/card/project?name=LGTM%20%E2%80%94%20Looks%20Good%20To%20Meow&desc=Live%20AI%20code%20review%20%2B%20CI%2FCD%20security%20SaaS%3A%206-lens%20review%20pipeline%2C%2036%20security%20detectors%2C%20SBOM%2C%20posture%20analytics%2C%20org%20RBAC%20and%20a%20CLI.&tags=Node.js,TypeScript,React,MongoDB,Redis&link=looksgoodtomeow.in&badge=%2336%20Product%20of%20the%20Day&icon=cat&theme=forest" alt="project"/> | <img src="https://doodlebug.tarinagarwal.in/api/card/achievements?items=Winner:%20Gameathon%202K26%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants)&theme=paper&width=440" alt="achievements"/> |
+
+<a href="https://tarinagarwal.in"><img src="https://doodlebug.tarinagarwal.in/api/card/link?label=Portfolio&sub=tarinagarwal.in&icon=globe" alt="portfolio" height="60"/></a> <a href="https://linkedin.com/in/tarin-agarwal-810793267"><img src="https://doodlebug.tarinagarwal.in/api/card/link?label=LinkedIn&icon=linkedin&theme=ocean" alt="linkedin" height="60"/></a> <a href="mailto:tarinagarwal@gmail.com"><img src="https://doodlebug.tarinagarwal.in/api/card/link?label=Email&icon=mail&theme=sakura&style=outline" alt="email" height="60"/></a>
 
 | Type | What it draws |
 |---|---|
@@ -32,20 +38,23 @@ Doodlebug turns your GitHub activity into **hand-drawn SVG cards** — every str
 | `banner` | Wide handwritten header with your name, tagline and doodles |
 | `skills` | Your stack as sketched stickers |
 | `note` | A taped sticky note with handwritten text |
+| `project` | Your own title, description, tags, link and ribbon badge — optionally merged with live repo stats |
+| `achievements` | Hackathon wins, awards, certifications as numbered hand-drawn medals |
+| `link` | A hand-drawn button for portfolio / LinkedIn / email — wrap it in a link |
 
 ## Usage
 
 ```
-https://doodle-bug.vercel.app/api/card/<type>?username=<login>&theme=<theme>&…
+https://doodlebug.tarinagarwal.in/api/card/<type>?username=<login>&theme=<theme>&…
 ```
 
 ```md
-[![My stats](https://doodle-bug.vercel.app/api/card/stats?username=octocat&theme=chalkboard)](https://github.com/octocat)
+[![My stats](https://doodlebug.tarinagarwal.in/api/card/stats?username=octocat&theme=chalkboard)](https://github.com/octocat)
 ```
 
 Themes: `paper` `notebook` `grid` `sticky` `kraft` `sakura` `forest` `ocean` `candy` `chalkboard` `blueprint` `midnight` `graphite` `dracula` — or override any colour with `bg`, `ink`, `accent`, `accent2`, `muted` (hex without `#`).
 
-Every parameter is documented on the [docs page](https://doodle-bug.vercel.app/docs), and the [dashboard](https://doodle-bug.vercel.app/dashboard) has a live builder that writes the markdown for you.
+Every parameter is documented on the [docs page](https://doodlebug.tarinagarwal.in/docs), and the [dashboard](https://doodlebug.tarinagarwal.in/dashboard) has a live builder that writes the markdown for you.
 
 ### Public data vs. your own token
 

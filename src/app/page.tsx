@@ -16,7 +16,7 @@ export default async function Home() {
         <Sparkle className="absolute left-2 top-8 rotate-12" size={30} />
         <Star className="absolute right-6 top-4 -rotate-12 hidden md:block" size={28} color="#ff5da2" />
         <div>
-          <p className="mb-3 inline-block sketch-flat bg-[#fde9b6] px-3 py-1 text-sm rotate-1">✎ free · no token required · 14 themes</p>
+          <p className="mb-3 inline-block sketch-flat bg-[#fde9b6] px-3 py-1 text-sm rotate-1">✎ free · no token required · 13 cards · 14 themes</p>
           <h1 className="title-hand text-6xl leading-[0.95] md:text-7xl lg:text-8xl">
             Your GitHub stats,
             <br />
@@ -59,7 +59,7 @@ export default async function Home() {
       {/* ---------------- Marquee of cards ---------------- */}
       <section className="py-10">
         <h2 className="title-hand text-4xl md:text-5xl">
-          Ten card types. <span className="hl-teal">One wobbly pen.</span>
+          Thirteen card types. <span className="hl-teal">One wobbly pen.</span>
         </h2>
         <p className="mt-2 max-w-2xl text-lg text-ink-soft">Every card is an SVG generated on the fly with sketchy rough.js strokes and embedded handwriting fonts, so it renders anywhere — including GitHub READMEs.</p>
         <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -69,6 +69,8 @@ export default async function Home() {
           <Demo title="Activity graph" src={`/api/card/graph?username=${DEMO_USER}&theme=midnight&days=45`} rotate="rotate-1" />
           <Demo title="Repo pin" src={`/api/card/repo?username=${DEMO_USER}&repo=Doodlebug&theme=sakura`} rotate="rotate-2" />
           <Demo title="Skill stickers" src={`/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Redis,Docker,AWS,Solidity,Unreal&theme=kraft`} rotate="rotate-3" />
+          <Demo title="Project" src={`/api/card/project?name=LGTM%20%E2%80%94%20Looks%20Good%20To%20Meow&desc=Live%20AI%20code%20review%20%2B%20CI%2FCD%20security%20SaaS%3A%206-lens%20review%20pipeline%2C%2036%20security%20detectors%2C%20SBOM%2C%20posture%20analytics%2C%20org%20RBAC%20and%20a%20CLI.&tags=Node.js,TypeScript,React,MongoDB,Redis&link=looksgoodtomeow.in&badge=%2336%20Product%20of%20the%20Day&icon=cat&theme=forest`} rotate="rotate-1" />
+          <Demo title="Achievements" src={`/api/card/achievements?items=Winner:%20Gameathon%202K26%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants)&theme=paper`} rotate="rotate-2" />
         </div>
         <div className="mt-6 sketch-3 p-2 rotate-1">
           <img src={`/api/card/banner?username=${DEMO_USER}&theme=paper&text=full-stack%20dev%20%C2%B7%20game%20dev%20%C2%B7%20doodler`} alt="Example banner" className="h-auto w-full" width={900} height={230} />

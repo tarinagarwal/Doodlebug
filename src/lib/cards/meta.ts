@@ -2,7 +2,7 @@
  * Client-safe metadata about cards: types, docs and builder controls.
  * (No server-only imports here.)
  */
-export const CARD_TYPES = ["stats", "langs", "streak", "activity", "graph", "trophies", "repo", "banner", "skills", "note"] as const;
+export const CARD_TYPES = ["stats", "langs", "streak", "activity", "graph", "trophies", "repo", "banner", "skills", "note", "project", "achievements", "link"] as const;
 export type CardType = (typeof CARD_TYPES)[number];
 
 export interface ParamDoc {
@@ -269,9 +269,80 @@ export const CARD_META: CardMeta[] = [
       { kind: "toggle", key: "doodles", label: "Decorative doodles", def: true, invert: true },
     ],
   },
+
+  {
+    type: "project",
+    label: "Project",
+    blurb: "Your own title, description, tags and link — optionally merged with live repo stats.",
+    needsUser: false,
+    params: [
+      { name: "name", desc: "Project title" },
+      { name: "desc", desc: "Description (up to ~400 chars)" },
+      { name: "tags", desc: "Comma list of tech tags", example: "Node,TypeScript,MongoDB" },
+      { name: "link", desc: "URL shown in the footer" },
+      { name: "badge", desc: "Small ribbon text", example: "%2336 Product of the Day" },
+      { name: "icon", desc: "Header icon name", example: "cat" },
+      { name: "username + repo", desc: "Also show language / stars / forks from that repo" },
+      { name: "width", desc: "Card width (default 440)" },
+      { name: "lines", desc: "Max description lines (default 4)" },
+      ...COMMON_PARAMS.filter((p) => !["title", "hide_title"].includes(p.name)),
+    ],
+    controls: [
+      { kind: "text", key: "name", label: "Title", placeholder: "My project", max: 50 },
+      { kind: "text", key: "desc", label: "Description", placeholder: "What it is, what it does, why it matters", max: 400 },
+      { kind: "text", key: "tags", label: "Tags", placeholder: "Node.js,TypeScript,MongoDB", hint: "comma separated" },
+      { kind: "text", key: "link", label: "Link", placeholder: "https://...", max: 80 },
+      { kind: "text", key: "badge", label: "Ribbon badge", placeholder: "e.g. #36 Product of the Day", max: 40 },
+      { kind: "text", key: "icon", label: "Icon", placeholder: "rocket, cat, code, bolt...", max: 20 },
+      { kind: "text", key: "repo", label: "Repo (optional)", placeholder: "adds stars/forks/language", hint: "uses the username above", max: 100 },
+      { kind: "number", key: "width", label: "Width", min: 300, max: 900, def: 440 },
+      { kind: "toggle", key: "hide_border", label: "Hide border", def: false },
+      { kind: "toggle", key: "doodles", label: "Decorative doodles", def: true, invert: true },
+      { kind: "toggle", key: "animate", label: "Fade-in animation", def: true, invert: true },
+    ],
+  },
+  {
+    type: "achievements",
+    label: "Achievements",
+    blurb: "Hackathon wins, awards, certifications — as numbered hand-drawn medals.",
+    needsUser: false,
+    params: [
+      { name: "items", desc: "Semicolon-separated list. Write each item as Label: detail — the medal colour follows the label (winner, runner-up, 3rd, top...)", example: "Winner: Buildverse 2025;Top 100: Hackhazards" },
+      { name: "width", desc: "Card width (default 495)" },
+      ...COMMON_PARAMS,
+    ],
+    controls: [
+      { kind: "text", key: "items", label: "Items", placeholder: "Winner: Buildverse 2025;Runner-up: GameForge 2025;Top 100: Hackhazards 2025", hint: "separate items with ; and write Label: detail", max: 1200 },
+      { kind: "number", key: "width", label: "Width", min: 300, max: 900, def: 495 },
+      ...COMMON_CONTROLS,
+    ],
+  },
+  {
+    type: "link",
+    label: "Link sticker",
+    blurb: "A hand-drawn button for portfolio, LinkedIn, email... wrap it in a link in your README.",
+    needsUser: false,
+    params: [
+      { name: "label", desc: "Button text", example: "Portfolio" },
+      { name: "sub", desc: "Small second line", example: "tarinagarwal.in" },
+      { name: "icon", desc: "Icon name", example: "globe, linkedin, mail, cat, x, youtube, doc" },
+      { name: "style", desc: "sticker (filled, default) or outline" },
+      { name: "size", desc: "Font size 12-30" },
+      { name: "width", desc: "Fixed width (default: auto)" },
+      { name: "theme / colours", desc: "Same as other cards" },
+    ],
+    controls: [
+      { kind: "text", key: "label", label: "Label", placeholder: "Portfolio", max: 40 },
+      { kind: "text", key: "sub", label: "Sub line", placeholder: "optional", max: 60 },
+      { kind: "text", key: "icon", label: "Icon", placeholder: "globe, linkedin, mail, cat, x...", max: 20 },
+      { kind: "select", key: "style", label: "Style", def: "sticker", options: [{ value: "sticker", label: "Sticker" }, { value: "outline", label: "Outline" }] },
+      { kind: "number", key: "size", label: "Font size", min: 12, max: 30, def: 18 },
+      { kind: "toggle", key: "animate", label: "Fade-in animation", def: true, invert: true },
+    ],
+  },
 ];
 
-export const ICON_NAMES = ["star", "fork", "commit", "pr", "issue", "eye", "heart", "fire", "trophy", "calendar", "book", "people", "rocket", "code", "repo", "clock", "pin", "bug", "coffee", "bolt", "branch", "check", "folder", "sparkle", "graph", "cat", "pencil", "moon", "globe", "mail", "hash", "smile"];
+export const ICON_NAMES = ["external", "link", "linkedin", "x", "instagram", "youtube", "briefcase", "doc", "phone", "discord", "medium", "dev", "npm", "star", "fork", "commit", "pr", "issue", "eye", "heart", "fire", "trophy", "calendar", "book", "people", "rocket", "code", "repo", "clock", "pin", "bug", "coffee", "bolt", "branch", "check", "folder", "sparkle", "graph", "cat", "pencil", "moon", "globe", "mail", "hash", "smile"];
 
 export function isCardType(s: string): s is CardType {
   return (CARD_TYPES as readonly string[]).includes(s);

@@ -14,7 +14,16 @@ export function repoCard(repo: RepoInfo, sp: URLSearchParams, c: CommonParams): 
   const name = showOwner ? `${repo.owner}/${repo.name}` : repo.name;
   const descLines = repo.description ? wrap(repo.description, W - 60, 14, "hand", 3) : ["No description, but probably something cool."];
   const top = 34;
-  const H = top + 26 + descLines.length * 19 + 46;
+  // topics get their own row (max 4, only those that fit) so they never collide with the stats footer
+  const topics: { name: string; w: number }[] = [];
+  let tw = 0;
+  for (const tp of repo.topics.slice(0, 6)) {
+    const w = measure(tp, 11) + 18;
+    if (topics.length === 4 || tw + w + 6 > W - 60) break;
+    topics.push({ name: tp, w });
+    tw += w + 6;
+  }
+  const H = top + 26 + descLines.length * 19 + (topics.length ? 30 : 0) + 46;
 
   // header
   body.push(icon(sk, "repo", 26, top - 18, 22, t.ink));
@@ -35,6 +44,17 @@ export function repoCard(repo: RepoInfo, sp: URLSearchParams, c: CommonParams): 
   // description
   descLines.forEach((l, i) => body.push(text(30, top + 30 + i * 19, l, { size: 14, fill: repo.description ? t.ink : t.muted })));
 
+  // topics row
+  if (topics.length) {
+    const ty = top + 30 + descLines.length * 19 + 4;
+    let tx = 30;
+    for (const tp of topics) {
+      body.push(sk.roundRect(tx, ty - 12, tp.w, 18, 5, { stroke: t.accent2, strokeWidth: 1, fill: t.accent2, fillStyle: "solid", fillOpacity: 0.18, roughness: 0.8, double: false }));
+      body.push(text(tx + tp.w / 2, ty + 1, tp.name, { size: 11, fill: t.ink, anchor: "middle" }));
+      tx += tp.w + 6;
+    }
+  }
+
   // footer: language, stars, forks
   const fy = H - 24;
   let x = 30;
@@ -48,18 +68,6 @@ export function repoCard(repo: RepoInfo, sp: URLSearchParams, c: CommonParams): 
   x += 21 + measure(fmtNum(repo.stars), 14) + 20;
   body.push(icon(sk, "fork", x, fy - 14, 16, t.ink));
   body.push(text(x + 21, fy, fmtNum(repo.forks), { size: 14, fill: t.ink }));
-
-  if (repo.topics.length) {
-    let tx = W - 30;
-    const shown = repo.topics.slice(0, 3);
-    for (const tp of shown.reverse()) {
-      const w = measure(tp, 11) + 12;
-      tx -= w;
-      body.push(sk.roundRect(tx, fy - 12, w, 17, 5, { stroke: t.accent2, strokeWidth: 1, fill: t.accent2, fillStyle: "solid", fillOpacity: 0.18, roughness: 0.8, double: false }));
-      body.push(text(tx + w / 2, fy, tp, { size: 11, fill: t.ink, anchor: "middle" }));
-      tx -= 6;
-    }
-  }
 
   return frame({ width: W, height: H, theme: t, seed: c.seed, hideBorder: c.hideBorder, doodles: c.doodles, bottomDoodle: false, animate: c.animate, desc: `${repo.owner}/${repo.name}` }, body.join(""));
 }
