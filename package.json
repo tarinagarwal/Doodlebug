@@ -1,0 +1,33 @@
+{
+  "name": "doodlebug",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "gen:assets": "node scripts/gen-assets.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.9",
+    "mongoose": "^9.9.3",
+    "next": "15.5.23",
+    "nodemailer": "^9.0.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "roughjs": "^4.6.6",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22",
+    "@types/nodemailer": "^7.0.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5"
+  }
+}
