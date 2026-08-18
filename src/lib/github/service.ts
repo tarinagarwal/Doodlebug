@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { db } from "../db";
 import { CacheEntry, User } from "../models";
 import { decrypt } from "../crypto";
@@ -71,18 +72,37 @@ export async function getBundle(login: string, opts?: { token?: string; bypassCa
     if (cached.error) throw new GitHubError(cached.error.kind as GitHubError["kind"], cached.error.message, cached.error.kind === "not_found" ? 404 : 0);
   }
 
-  try {
+  const refresh = async (): Promise<UserBundle> => {
     const bundle = await fetchUserBundle(login, resolved.token);
-    await writeCache(key, { data: bundle, freshUntil: now + (authed ? FRESH_AUTH_MS : FRESH_PUBLIC_MS) }, STALE_MS);
+    await writeCache(key, { data: bundle, freshUntil: Date.now() + (authed ? FRESH_AUTH_MS : FRESH_PUBLIC_MS) }, STALE_MS);
+    return bundle;
+  };
+
+  // Stale cache: answer immediately and refresh in the background (GitHub's image proxy has a short timeout).
+  if (cached?.data) {
+    scheduleBackground(() => refresh());
+    return { bundle: cached.data, cached: true, authed };
+  }
+
+  try {
+    const bundle = await refresh();
     return { bundle, cached: false, authed };
   } catch (e) {
     const ge = e instanceof GitHubError ? e : new GitHubError("other", (e as Error).message);
     if (ge.kind === "not_found") {
       await writeCache(key, { data: null, error: { kind: ge.kind, message: ge.message }, freshUntil: now + NEG_MS }, NEG_MS);
-      throw ge;
     }
-    if (cached?.data) return { bundle: cached.data, cached: true, authed }; // stale but usable
     throw ge;
+  }
+}
+
+/** Runs work after the response is sent when supported (Next.js `after`), else fire-and-forget. */
+function scheduleBackground(fn: () => Promise<unknown>): void {
+  const run = () => fn().catch((e) => console.error("[cache refresh]", e));
+  try {
+    after(run);
+  } catch {
+    void run();
   }
 }
 

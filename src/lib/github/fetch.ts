@@ -288,14 +288,12 @@ interface RestRepo {
 }
 
 async function fetchViaRest(login: string, token?: string): Promise<UserBundle> {
-  const u = await ghRest<RestUser>(`/users/${encodeURIComponent(login)}`, token);
-  const repos: RestRepo[] = [];
-  for (let p = 1; p <= 3; p++) {
-    const page = await ghRest<RestRepo[]>(`/users/${encodeURIComponent(login)}/repos?per_page=100&type=owner&sort=pushed&page=${p}`, token);
-    repos.push(...page);
-    if (page.length < 100) break;
-  }
-  const years = yearsSince(u.created_at, 8);
+  const [u, ...pages] = await Promise.all([
+    ghRest<RestUser>(`/users/${encodeURIComponent(login)}`, token),
+    ...[1, 2, 3].map((p) => ghRest<RestRepo[]>(`/users/${encodeURIComponent(login)}/repos?per_page=100&type=owner&sort=pushed&page=${p}`, token).catch(() => [] as RestRepo[])),
+  ]);
+  const repos: RestRepo[] = (pages as RestRepo[][]).flat();
+  const years = yearsSince(u.created_at, 6);
   const [prs, merged, issues, commitsAll, ...yearHtml] = await Promise.all([
     searchCount(`author:${login} type:pr`, token),
     searchCount(`author:${login} type:pr is:merged`, token),
