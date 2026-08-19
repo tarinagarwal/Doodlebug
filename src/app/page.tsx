@@ -105,14 +105,17 @@ export default async function Home() {
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <Step n={1} title="Sign up (30 seconds)" body="Email + password, verify your inbox, done. Your account is where you save your GitHub username and, optionally, a token." />
           <Step n={2} title="Pick a card, tweak the look" body="Choose a card in the sidebar, hit a quick-start preset or tweak the options. The preview updates live — it's the same SVG GitHub will render. Save it to edit later." />
-          <Step n={3} title="Copy the markdown" body="Paste the snippet into your profile README. Cards refresh themselves every ~30 minutes with fresh data." />
+          <Step n={3} title="Copy the markdown" body="Paste the snippet into your profile README. Cards refresh themselves every ~30 minutes with fresh data — and a saved card gets a short link you can restyle later without touching the README again." />
         </div>
       </section>
 
       {/* ---------------- Themes ---------------- */}
       <section className="py-10">
         <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">Themes for every notebook</h2>
-        <p className="mt-2 text-base text-ink-soft sm:text-lg">Or override any colour with hex params. Dark themes look great on dark GitHub.</p>
+        <p className="mt-2 text-base text-ink-soft sm:text-lg">
+          Or override any colour with hex params. Dark themes look great on dark GitHub — and{" "}
+          <code className="code">theme=auto</code> ships one card that switches to a dark palette by itself.
+        </p>
         <div className="mt-6 flex flex-wrap gap-3">
           {Object.values(THEMES).map((t) => (
             <div key={t.key} className="sketch-flat flex items-center gap-2 px-3 py-1.5" style={{ background: t.bg, color: t.ink, borderColor: t.ink }}>
@@ -121,6 +124,11 @@ export default async function Home() {
               <span>{t.label}</span>
             </div>
           ))}
+        </div>
+        <div className="mt-6">
+          <Link href="/themes" className="btn">
+            See every theme side by side <Icon name="arrowRight" size={18} />
+          </Link>
         </div>
       </section>
 
@@ -170,6 +178,8 @@ export default async function Home() {
           <Faq q="Which token scopes do I need?" a="None. A classic token with every scope box left unchecked already lifts the rate limit and reads public data — that is all most cards need. Only add read:user (and repo, if you want private repositories counted) when you want private-contribution numbers." />
           <Faq q="How fresh is the data?" a="Cards refresh every 30 minutes (60 for public fetching) and are served with cache headers GitHub respects. Change a param — like &seed=2 — to force a new image." />
           <Faq q="Can I customise colours?" a="Yes: pick a theme, then override any of bg, ink, accent, accent2 or muted with a hex value, e.g. &accent=ff5da2." />
+          <Faq q="Can one card work in both light and dark mode?" a="Yes — use theme=auto. The card is drawn in the paper palette and recolours itself to midnight when the reader prefers dark, from a single URL. One caveat: an SVG loaded through an img tag follows the reader's browser or OS setting rather than GitHub's own light/dark toggle, so it matches most people but not everyone." />
+          <Faq q="Can I change a card after pasting it into my README?" a="Yes. Save a card and it also gets a short link like /c/<id>.svg. Paste that once, then restyle the card in the dashboard whenever you like — every README using the link updates on its own, and you never edit the markdown again." />
           <Faq q="Is it really hand-drawn?" a="Every stroke is generated with rough.js and a per-user seed, so your card is unique. Fonts are real handwriting fonts embedded into the SVG." />
         </div>
       </section>
