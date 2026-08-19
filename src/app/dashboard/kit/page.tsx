@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth";
 import { ReadmeKit } from "@/components/readme-kit";
 import { appUrl } from "@/lib/verification";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "README starter kit" };
+export const metadata: Metadata = pageMetadata({
+  title: "README starter kit",
+  description:
+    "A ready-made block of Doodlebug cards you can paste straight into your GitHub profile README.",
+  path: "/dashboard/kit",
+  noIndex: true,
+});
 
 export default async function KitPage() {
   const user = (await getCurrentUser())!;

@@ -5,8 +5,15 @@ import { Builder } from "@/components/dashboard/builder";
 import { Onboarding } from "@/components/onboarding";
 import { Spinner } from "@/components/ui";
 import { appUrl } from "@/lib/verification";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Card builder" };
+export const metadata: Metadata = pageMetadata({
+  title: "Card builder",
+  description:
+    "Pick a card type, tweak the options and watch the preview update live — then copy the markdown for your README.",
+  path: "/dashboard",
+  noIndex: true,
+});
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const user = (await getCurrentUser())!;

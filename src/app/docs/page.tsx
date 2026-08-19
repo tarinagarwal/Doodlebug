@@ -4,8 +4,17 @@ import { CARD_META, ICON_NAMES } from "@/lib/cards/meta";
 import { THEMES } from "@/lib/cards/theme";
 import { appUrl } from "@/lib/verification";
 import { Squiggle } from "@/components/doodles";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Docs" };
+export const metadata: Metadata = pageMetadata({
+  title: "Docs",
+  description:
+    "Every Doodlebug card is a plain URL that returns an SVG. Full parameter reference for all 13 card types, 15 themes, colour overrides, saved-card short links and self-hosting.",
+  path: "/docs",
+  ogTitle: "Docs",
+  ogSubtitle: "Every card is a URL. Here is every parameter it takes.",
+  art: "cards",
+});
 
 const DEMO = "tarinagarwal";
 

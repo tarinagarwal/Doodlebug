@@ -4,8 +4,17 @@ import { redirect } from "next/navigation";
 import { SignupForm } from "@/components/auth-forms";
 import { getCurrentUser } from "@/lib/auth";
 import { Spinner } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Sign up" };
+export const metadata: Metadata = pageMetadata({
+  title: "Sign up",
+  description:
+    "Create a free Doodlebug account to save card designs, get a short stable link for each one, and optionally add an encrypted GitHub token for private-contribution counts.",
+  path: "/signup",
+  ogTitle: "Start doodling",
+  ogSubtitle: "Free account. Save your cards and restyle them any time.",
+  art: "hero",
+});
 export const dynamic = "force-dynamic";
 
 export default async function Page() {

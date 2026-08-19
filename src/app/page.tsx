@@ -1,11 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, Cloud, Heart, Icon, Sparkle, Squiggle, Star, Underline } from "@/components/doodles";
 import { CARD_META } from "@/lib/cards";
 import { THEMES } from "@/lib/cards/theme";
 import { getCurrentUser } from "@/lib/auth";
 import { getRenderTotals } from "@/lib/stats";
+import { pageMetadata } from "@/lib/seo";
 
 const DEMO_USER = "tarinagarwal";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Doodlebug — hand-drawn GitHub stats cards for your README",
+  description:
+    "Turn your GitHub activity into hand-drawn SVG cards: stats, streaks, top languages, trophies, contribution heatmaps, repo pins and banners. 13 card types, 15 themes, works for any public GitHub user.",
+  path: "/",
+  ogTitle: "Hand-drawn GitHub stats",
+  ogSubtitle: "Stats, streaks, languages, trophies and banners for your README.",
+  art: "hero",
+});
 
 export default async function Home() {
   const [user, totals] = await Promise.all([getCurrentUser(), getRenderTotals()]);

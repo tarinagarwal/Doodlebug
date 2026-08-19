@@ -7,8 +7,15 @@ import { serializeCard } from "@/lib/saved";
 import { MyCards } from "@/components/dashboard/my-cards";
 import { Icon } from "@/components/doodles";
 import { appUrl } from "@/lib/verification";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "My cards" };
+export const metadata: Metadata = pageMetadata({
+  title: "My cards",
+  description:
+    "Every card design you have saved. Each one has a short, stable link you can paste once and restyle later.",
+  path: "/dashboard/cards",
+  noIndex: true,
+});
 
 export default async function MyCardsPage() {
   const user = (await getCurrentUser())!;

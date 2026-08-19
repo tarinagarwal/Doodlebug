@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy",
+  description: "What Doodlebug stores, how your GitHub token is encrypted, what the render log contains and how to delete your account.",
+  path: "/privacy",
+  ogTitle: "Privacy",
+  ogSubtitle: "What we store, what we don't, and how to delete it.",
+  art: "cards",
+});
 
 export default function PrivacyPage() {
   return (

@@ -3,8 +3,15 @@ import type { Metadata } from "next";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { DangerZone, GithubForm, PasswordForm, SessionsForm, TokenForm } from "@/components/settings-forms";
 import { Icon } from "@/components/doodles";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Settings" };
+export const metadata: Metadata = pageMetadata({
+  title: "Settings",
+  description:
+    "Set your GitHub username and default theme, manage your encrypted GitHub token, change your password or sign out everywhere.",
+  path: "/dashboard/settings",
+  noIndex: true,
+});
 
 export default async function SettingsPage() {
   const user = toPublicUser((await getCurrentUser())!);

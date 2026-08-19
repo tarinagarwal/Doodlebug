@@ -41,6 +41,26 @@ const ASSETS = [
     prompt: `${STYLE} A small doodle of an open blank spiral notebook with a pencil resting on it and three little sparkles above, sticker style on transparent background.`,
   },
   {
+    // Social-preview artwork. Composed into 1200x630 PNGs by /api/og, so it is drawn wide
+    // and kept to the right-hand side with room for the headline on the left.
+    name: "og-hero",
+    size: "1536x1024",
+    background: "transparent",
+    prompt: `${STYLE} A cheerful doodle cluster on a transparent background: the cute ladybug-beetle mascot with a yellow-orange spotted shell waving one arm while holding a fountain pen, standing next to a hand-drawn README page showing a wobbly bar chart, a small flame for a streak, a donut chart and a tiny trophy. Add a few floating sticker doodles around them — a star, a heart, a sparkle, a git branch fork. Sticker style, thick wobbly outlines, generous spacing, no text.`,
+  },
+  {
+    name: "og-cards",
+    size: "1536x1024",
+    background: "transparent",
+    prompt: `${STYLE} A doodle of three overlapping hand-drawn stat cards fanned out like playing cards on a transparent background: one showing a wobbly bar chart, one a donut chart, one a flame and a small calendar heatmap grid. A pencil rests diagonally across them and two sparkles float above. Sticker style, thick wobbly outlines, no text.`,
+  },
+  {
+    name: "og-palette",
+    size: "1536x1024",
+    background: "transparent",
+    prompt: `${STYLE} A doodle of an artist palette with blobs of mustard yellow, teal, coral pink and deep navy paint, a paintbrush and two marker pens beside it, and a small hand-drawn card swatch showing colour stripes. The cute ladybug-beetle mascot peeks over the top edge of the palette. Sticker style on transparent background, no text.`,
+  },
+  {
     name: "notfound",
     size: "1024x1024",
     background: "transparent",

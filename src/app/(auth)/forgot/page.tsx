@@ -4,8 +4,15 @@ import { redirect } from "next/navigation";
 import { ForgotForm } from "@/components/auth-forms";
 import { getCurrentUser } from "@/lib/auth";
 import { Spinner } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Forgot password" };
+export const metadata: Metadata = pageMetadata({
+  title: "Forgot password",
+  description:
+    "Send yourself a Doodlebug password reset link.",
+  path: "/forgot",
+  art: "cards",
+});
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
