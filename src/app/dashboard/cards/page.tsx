@@ -18,8 +18,8 @@ export default async function MyCardsPage() {
     <div>
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="title-hand text-4xl md:text-5xl">My cards</h1>
-          <p className="mt-1 text-ink-soft">Everything you saved. Edit any card and its markdown updates with it.</p>
+          <h1 className="title-hand text-3xl sm:text-4xl md:text-5xl">My cards</h1>
+          <p className="mt-1 text-ink-soft">Everything you saved. Each one has a short, stable link — paste it once and editing the card updates every README using it.</p>
         </div>
         <Link href="/dashboard?type=stats" className="btn btn-primary">
           <Icon name="plus" size={16} /> New card

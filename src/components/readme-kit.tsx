@@ -37,7 +37,7 @@ export function ReadmeKit({ username, theme: initialTheme, origin, name }: { use
       <div className="sketch-3 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="title-hand text-3xl">One block, whole profile</h2>
+            <h2 className="title-hand text-2xl sm:text-3xl">One block, whole profile</h2>
             <p className="text-ink-soft">Paste this into github.com/{username}/{username} → README.md</p>
           </div>
           <div className="flex items-center gap-2">
