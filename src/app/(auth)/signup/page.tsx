@@ -11,9 +11,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Create a free Doodlebug account to save card designs, get a short stable link for each one, and optionally add an encrypted GitHub token for private-contribution counts.",
   path: "/signup",
-  ogTitle: "Start doodling",
-  ogSubtitle: "Free account. Save your cards and restyle them any time.",
-  art: "hero",
+  og: "signup",
 });
 export const dynamic = "force-dynamic";
 

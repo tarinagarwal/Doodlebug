@@ -3,7 +3,7 @@ import { Caveat, Kalam, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import { Footer, Nav } from "@/components/nav";
 import { StarBar } from "@/components/star-bar";
-import { ogImageUrl } from "@/lib/seo";
+import { ogImagePath } from "@/lib/seo";
 
 const patrick = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--font-patrick", display: "swap" });
 const caveat = Caveat({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-caveat", display: "swap" });
@@ -11,7 +11,7 @@ const kalam = Kalam({ subsets: ["latin"], weight: ["400", "700"], variable: "--f
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
-const OG = ogImageUrl("Hand-drawn GitHub stats", "Sketchy, wobbly, lovable cards for your README.", "hero");
+const OG = ogImagePath("app");
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: "Sketchy, wobbly, lovable GitHub README cards. Enter your username and go.",
     url: APP_URL,
     siteName: "Doodlebug",
-    images: [{ url: OG, width: 1200, height: 630, alt: "Doodlebug — hand-drawn GitHub stats cards" }],
+    images: [{ url: OG, width: 1200, height: 630, alt: "Doodlebug — hand-drawn GitHub stats cards", type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",

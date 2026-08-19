@@ -8,9 +8,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Every Doodlebug theme side by side — paper, notebook, chalkboard, blueprint, midnight, dracula and an auto light/dark theme. Hand-drawn GitHub README card themes with live previews.",
   path: "/themes",
-  ogTitle: "Fifteen themes",
-  ogSubtitle: "Paper, notebook, chalkboard, midnight — or your own hex colours.",
-  art: "palette",
+  og: "themes",
 });
 
 export const revalidate = 3600;

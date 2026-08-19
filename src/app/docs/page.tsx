@@ -11,9 +11,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Every Doodlebug card is a plain URL that returns an SVG. Full parameter reference for all 13 card types, 15 themes, colour overrides, saved-card short links and self-hosting.",
   path: "/docs",
-  ogTitle: "Docs",
-  ogSubtitle: "Every card is a URL. Here is every parameter it takes.",
-  art: "cards",
+  og: "docs",
 });
 
 const DEMO = "tarinagarwal";

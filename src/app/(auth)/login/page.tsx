@@ -11,9 +11,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Log in to your Doodlebug account to build, save and edit your hand-drawn GitHub README cards.",
   path: "/login",
-  ogTitle: "Welcome back",
-  ogSubtitle: "Log in to build and edit your cards.",
-  art: "cards",
+  og: "login",
 });
 export const dynamic = "force-dynamic";
 

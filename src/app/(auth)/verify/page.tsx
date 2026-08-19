@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Confirm your email address to finish setting up your Doodlebug account.",
   path: "/verify",
-  art: "cards",
+  og: "login",
   noIndex: true,
 });
 export const dynamic = "force-dynamic";

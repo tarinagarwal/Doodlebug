@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Choose a new password for your Doodlebug account. Resetting also signs out every other device.",
   path: "/reset",
-  art: "cards",
+  og: "login",
   noIndex: true,
 });
 export const dynamic = "force-dynamic";

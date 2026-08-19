@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "gen:assets": "node scripts/gen-assets.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "gen:og": "node scripts/gen-og.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.38.2",

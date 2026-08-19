@@ -14,9 +14,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Turn your GitHub activity into hand-drawn SVG cards: stats, streaks, top languages, trophies, contribution heatmaps, repo pins and banners. 13 card types, 15 themes, works for any public GitHub user.",
   path: "/",
-  ogTitle: "Hand-drawn GitHub stats",
-  ogSubtitle: "Stats, streaks, languages, trophies and banners for your README.",
-  art: "hero",
+  og: "home",
 });
 
 export default async function Home() {

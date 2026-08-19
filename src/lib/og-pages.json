@@ -1,0 +1,37 @@
+{
+  "app": {
+    "title": "Hand-drawn GitHub stats",
+    "subtitle": "Sketchy, wobbly, lovable cards for your README.",
+    "art": "hero"
+  },
+  "home": {
+    "title": "Hand-drawn GitHub stats",
+    "subtitle": "Stats, streaks, languages, trophies and banners for your README.",
+    "art": "hero"
+  },
+  "docs": {
+    "title": "Docs",
+    "subtitle": "Every card is a URL. Here is every parameter it takes.",
+    "art": "cards"
+  },
+  "themes": {
+    "title": "Fifteen themes",
+    "subtitle": "Paper, notebook, chalkboard, midnight or your own hex colours.",
+    "art": "palette"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "subtitle": "What we store, what we don't, and how to delete it.",
+    "art": "cards"
+  },
+  "signup": {
+    "title": "Start doodling",
+    "subtitle": "Free account. Save your cards and restyle them any time.",
+    "art": "hero"
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Log in to build and edit your cards.",
+    "art": "cards"
+  }
+}
