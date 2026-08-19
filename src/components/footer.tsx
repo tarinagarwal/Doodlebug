@@ -13,7 +13,11 @@ export function Footer() {
         <div className="flex items-center gap-2">
           <Mascot size={34} />
           <span>
-            Doodlebug — hand-drawn GitHub stats. Made with a wobbly pen by{" "}
+            Doodlebug — hand-drawn GitHub stats. Open source, MIT licensed. A{" "}
+            <a className="underline-squiggle text-ink" href="https://devsbazaar.com" target="_blank" rel="noreferrer">
+              DevsBazaar
+            </a>{" "}
+            product, made with a wobbly pen by{" "}
             <a className="underline-squiggle text-ink" href="https://github.com/tarinagarwal" target="_blank" rel="noreferrer">
               Tarin Agarwal
             </a>

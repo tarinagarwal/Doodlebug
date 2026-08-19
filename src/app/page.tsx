@@ -12,7 +12,7 @@ const DEMO_USER = "tarinagarwal";
 export const metadata: Metadata = pageMetadata({
   title: "Doodlebug — hand-drawn GitHub stats cards for your README",
   description:
-    "Turn your GitHub activity into hand-drawn SVG cards: stats, streaks, top languages, trophies, contribution heatmaps, repo pins and banners. 13 card types, 15 themes, works for any public GitHub user.",
+    "Turn your GitHub activity into hand-drawn SVG cards: stats, streaks, top languages, trophies, contribution heatmaps, repo pins and banners. 13 card types, 15 themes, works for any public GitHub user. Free and open source, MIT licensed.",
   path: "/",
   og: "home",
 });
@@ -31,7 +31,7 @@ export default async function Home() {
         <div>
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <p className="inline-block sketch-flat bg-[#fde9b6] px-3 py-1 text-sm rotate-1">
-              ✎ free · no token required · {cardCount} cards · {themeCount} themes
+              ✎ free · open source · no token required · {cardCount} cards · {themeCount} themes
             </p>
             {totals.cards > 0 ? (
               <p className="inline-block sketch-flat bg-[#cfe9e5] px-3 py-1 text-sm -rotate-1">
@@ -190,7 +190,43 @@ export default async function Home() {
           <Faq q="Can I customise colours?" a="Yes: pick a theme, then override any of bg, ink, accent, accent2 or muted with a hex value, e.g. &accent=ff5da2." />
           <Faq q="Can one card work in both light and dark mode?" a="Yes — use theme=auto. The card is drawn in the paper palette and recolours itself to midnight when the reader prefers dark, from a single URL. One caveat: an SVG loaded through an img tag follows the reader's browser or OS setting rather than GitHub's own light/dark toggle, so it matches most people but not everyone." />
           <Faq q="Can I change a card after pasting it into my README?" a="Yes. Save a card and it also gets a short link like /c/<id>.svg. Paste that once, then restyle the card in the dashboard whenever you like — every README using the link updates on its own, and you never edit the markdown again." />
+          <Faq q="Is Doodlebug really free?" a="Yes, and it is open source under the MIT licence — a DevsBazaar product, open sourced. There is no paid tier, no seat limit and no feature held back. If you would rather not depend on the hosted version, clone the repository and run the whole thing yourself." />
           <Faq q="Is it really hand-drawn?" a="Every stroke is generated with rough.js and a per-user seed, so your card is unique. Fonts are real handwriting fonts embedded into the SVG." />
+        </div>
+      </section>
+
+      {/* ---------------- Open source ---------------- */}
+      <section className="py-10">
+        <div className="sketch-dashed bg-[#fffdf7] p-5 sm:p-6 md:p-8">
+          <div className="grid items-center gap-6 md:grid-cols-[1fr_auto]">
+            <div>
+              <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">
+                Open source, <span className="hl-teal">all of it</span>
+              </h2>
+              <p className="mt-3 max-w-2xl text-base text-ink-soft sm:text-lg">
+                The card engine, the builder, the accounts, the caching — every line that draws these cards is on GitHub under the MIT licence. Read
+                it, fork it, run your own copy, or sell what you build with it. There is no paid tier holding features back, because there is no paid
+                tier.
+              </p>
+              <p className="mt-3 text-base text-ink-soft sm:text-lg">
+                Doodlebug is a{" "}
+                <a href="https://devsbazaar.com" target="_blank" rel="noreferrer" className="underline-squiggle text-ink">
+                  DevsBazaar
+                </a>{" "}
+                product, open sourced.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <a href="https://github.com/tarinagarwal/Doodlebug" target="_blank" rel="noreferrer" className="btn btn-primary">
+                  <Icon name="github" size={18} /> Star on GitHub
+                </a>
+                <a href="https://devsbazaar.com" target="_blank" rel="noreferrer" className="btn">
+                  More from DevsBazaar <Icon name="external" size={16} />
+                </a>
+              </div>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/art/mascot.webp" alt="" width={150} height={156} className="mx-auto hidden h-auto w-[150px] float md:block" loading="lazy" />
+          </div>
         </div>
       </section>
 

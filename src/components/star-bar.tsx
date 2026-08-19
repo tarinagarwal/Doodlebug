@@ -1,6 +1,7 @@
 const REPO_OWNER = "tarinagarwal";
 const REPO_NAME = "Doodlebug";
 const REPO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}`;
+const DEVSBAZAAR_URL = "https://devsbazaar.com";
 
 /** A wobbly, hand-drawn star with a wink of sparkle — matches the card aesthetic. */
 function CuteStar({ size = 18 }: { size?: number }) {
@@ -64,24 +65,32 @@ export async function StarBar() {
 
   return (
     <div className="border-b-2 border-ink/70 bg-[#fff3cf]">
-      <a
-        href={REPO_URL}
-        target="_blank"
-        rel="noreferrer"
-        className="group mx-auto flex h-9 w-full items-center justify-center gap-2 px-3 text-[0.86rem] leading-none sm:text-[0.95rem]"
-      >
+      <div className="mx-auto flex h-9 w-full items-center justify-center gap-2 px-3 text-[0.86rem] leading-none sm:text-[0.95rem]">
         <CuteStar />
         <span className="truncate">
           <b>Doodlebug is open source</b>
-          <span className="hidden sm:inline"> — if it drew you something nice, star the repo</span>
+          <span className="hidden sm:inline">
+            {" "}
+            &mdash; a{" "}
+            <a href={DEVSBAZAAR_URL} target="_blank" rel="noreferrer" className="underline-squiggle font-semibold">
+              DevsBazaar
+            </a>{" "}
+            product. If it drew you something nice, star it
+          </span>
         </span>
-        <span className="flex shrink-0 items-center gap-1 rounded-full border-2 border-ink bg-[#fffdf7] px-2 py-0.5 text-[0.8rem] leading-none shadow-[1.5px_1.5px_0_#2b2b2b] transition group-hover:-translate-y-px group-hover:shadow-[2.5px_2.5px_0_#2b2b2b]">
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={stars === null ? "Star Doodlebug on GitHub" : `Star Doodlebug on GitHub (${stars} stars)`}
+          className="group flex shrink-0 items-center gap-1 rounded-full border-2 border-ink bg-[#fffdf7] px-2 py-0.5 text-[0.8rem] leading-none shadow-[1.5px_1.5px_0_#2b2b2b] transition hover:-translate-y-px hover:shadow-[2.5px_2.5px_0_#2b2b2b]"
+        >
           <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 2.6 L14.8 8.4 L21.2 9.3 L16.5 13.9 L17.8 20.8 L12 17.5 L6.1 20.8 L7.4 13.9 L2.7 9.3 L9.1 8.4 Z" fill="#f7b32b" stroke="#2b2b2b" strokeWidth="1.8" strokeLinejoin="round" />
           </svg>
           <span className="tabular-nums">{stars === null ? "Star" : formatStars(stars)}</span>
-        </span>
-      </a>
+        </a>
+      </div>
     </div>
   );
 }

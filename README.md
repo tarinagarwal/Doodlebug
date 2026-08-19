@@ -2,11 +2,46 @@
 
 <img src="https://doodlebug.tarinagarwal.in/api/card/banner?name=Doodlebug&text=Hand-drawn%20GitHub%20stats%20cards%20for%20your%20README&subtitle=stats%20%C2%B7%20streaks%20%C2%B7%20languages%20%C2%B7%20trophies%20%C2%B7%20banners&icons=code,star,heart,rocket,coffee,fire,sparkle,bolt&theme=paper" alt="Doodlebug" width="100%"/>
 
-**[doodlebug.tarinagarwal.in](https://doodlebug.tarinagarwal.in)** · [Docs](https://doodlebug.tarinagarwal.in/docs) · [Report a bug](https://github.com/tarinagarwal/Doodlebug/issues)
+# Doodlebug
 
-Doodlebug turns your GitHub activity into **hand-drawn SVG cards** — every stroke is generated with [rough.js](https://roughjs.com) and a per-user seed, with real handwriting fonts embedded, so cards render anywhere (including GitHub READMEs) and no two look exactly alike.
+**Open-source hand-drawn GitHub stats cards for your README.**
+
+Doodlebug turns your GitHub activity into **hand-drawn SVG cards** — every stroke is generated
+with [rough.js](https://roughjs.com) and a per-user seed, with real handwriting fonts embedded,
+so cards render anywhere (including GitHub READMEs) and no two look exactly alike.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-f7b32b.svg)](LICENSE)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15-2b2b2b.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-2b2b2b.svg)](https://www.typescriptlang.org/)
+[![rough.js](https://img.shields.io/badge/rough.js-4-2b2b2b.svg)](https://roughjs.com)
+[![CI](https://github.com/tarinagarwal/Doodlebug/actions/workflows/ci.yml/badge.svg)](https://github.com/tarinagarwal/Doodlebug/actions/workflows/ci.yml)
+
+**A [DevsBazaar](https://devsbazaar.com) product — open sourced.**
+
+[Live site](https://doodlebug.tarinagarwal.in) ·
+[Docs](https://doodlebug.tarinagarwal.in/docs) ·
+[Themes](https://doodlebug.tarinagarwal.in/themes) ·
+[Report a bug](https://github.com/tarinagarwal/Doodlebug/issues)
 
 </div>
+
+---
+
+## Why Doodlebug exists
+
+Every README has the same stats card on it. They are competently drawn, identical to each
+other, and forgettable.
+
+Doodlebug draws yours by hand instead. Nothing is a template: every rectangle, ring, arc and
+icon is generated stroke by stroke with rough.js from a seed derived from your username, so
+your card is wobbly in a way nobody else's is. The handwriting fonts are embedded in the SVG
+rather than linked, which is what lets the result survive GitHub's image proxy.
+
+It is free, it needs no token to get started, and the whole thing — the card engine, the
+builder, the accounts, the caching — is in this repository. Run it hosted, or self-host the
+lot.
+
+---
 
 ## Cards
 
@@ -113,6 +148,32 @@ Deploys to Vercel with zero config.
 - **Card hot path** — no blocking database work: flood protection is an in-process counter, and render stats are buffered in memory and flushed as one bulk write after the response is sent. The tight limit sits on *uncached* GitHub lookups, which is where the cost actually is, so a popular README behind GitHub's camo proxy is never throttled for being popular.
 - **Tests** — every card type is rendered against a fixture bundle and checked for well-formed SVG, XML escaping, determinism and degenerate input (empty accounts, zero-width slices, 5,000-character text), plus golden snapshots. CI runs typecheck, lint, tests and a build on every push and PR.
 
+## Contributing
+
+Issues and pull requests are welcome. The card renderers are pure functions of
+`(bundle, URLSearchParams)`, so a new card type is one file in `src/lib/cards/` plus an entry
+in `src/lib/cards/meta.ts` — and the test suite renders every registered type automatically,
+so coverage comes for free.
+
+```bash
+pnpm test        # 93 tests, no database or network needed
+pnpm lint
+pnpm typecheck
+```
+
+Please report security vulnerabilities privately to **tarinagarwal@gmail.com** rather than in
+a public issue.
+
+Questions, ideas or commercial enquiries: **tarinagarwal@gmail.com**
+
+---
+
 ## License
 
-MIT © [Tarin Agarwal](https://github.com/tarinagarwal)
+[MIT](LICENSE) — use it, fork it, sell it. No licence fee, no attribution required.
+
+<div align="center">
+
+Built and open sourced by **[DevsBazaar](https://devsbazaar.com)**
+
+</div>
