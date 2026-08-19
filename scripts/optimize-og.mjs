@@ -24,7 +24,8 @@ for (const name of NAMES) {
   await sharp(src)
     .trim({ threshold: 1 }) // drop the transparent margin the model leaves around the subject
     .resize({ width: WIDTH, withoutEnlargement: true })
-    .png({ compressionLevel: 9, palette: true, quality: 90 })
+    // No palette: satori cannot decode indexed PNGs and reports "Unsupported image type".
+    .png({ compressionLevel: 9 })
     .toFile(dst);
 
   const before = fs.statSync(src).size;
