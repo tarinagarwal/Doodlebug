@@ -168,13 +168,21 @@ interface YearStats {
 }
 
 /**
- * GitHub exposes no all-time commit count. `/search/commits` looks like one but counts every
- * indexed copy of a commit, so forks and mirrors inflate it into the millions for prolific
- * accounts. Summing `totalCommitContributions` year by year gives the number GitHub itself
- * shows on a profile, which is the one people expect to see.
+ * `contributionsCollection` is expensive for GitHub to materialise, and asking for a dozen
+ * years in one document reliably 502s or 504s for busy accounts — which used to be swallowed
+ * by a catch, silently costing those users their whole contribution history. Four years per
+ * request answers comfortably, and the chunks run concurrently so the wall-clock cost is one
+ * request rather than three.
  */
-async function fetchYearStatsGql(login: string, years: number[], token: string): Promise<YearStats> {
-  if (!years.length) return { calendars: [], commits: 0 };
+const YEAR_CHUNK = 4;
+
+interface GqlYear {
+  totalCommitContributions: number;
+  restrictedContributionsCount: number;
+  contributionCalendar: { weeks: { contributionDays: { date: string; contributionCount: number }[] }[] };
+}
+
+async function fetchYearChunk(login: string, years: number[], token: string): Promise<YearStats> {
   const parts = years
     .map(
       (y) =>
@@ -182,18 +190,45 @@ async function fetchYearStatsGql(login: string, years: number[], token: string):
     )
     .join("\n");
   const q = `query($login: String!) { user(login: $login) { ${parts} } }`;
-  type Year = {
-    totalCommitContributions: number;
-    restrictedContributionsCount: number;
-    contributionCalendar: { weeks: { contributionDays: { date: string; contributionCount: number }[] }[] };
-  };
-  const data = await ghGraphql<{ user: Record<string, Year> }>(q, { login }, token);
+  const data = await ghGraphql<{ user: Record<string, GqlYear> | null }>(q, { login }, token);
   let commits = 0;
   const calendars = years.map((y) => {
-    const yr = data.user[`y${y}`];
+    const yr = data.user?.[`y${y}`];
     commits += (yr?.totalCommitContributions ?? 0) + (yr?.restrictedContributionsCount ?? 0);
     return (yr?.contributionCalendar?.weeks ?? []).flatMap((w) => w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount })));
   });
+  return { calendars, commits };
+}
+
+/**
+ * GitHub exposes no all-time commit count. `/search/commits` looks like one but counts every
+ * indexed copy of a commit, so forks and mirrors inflate it into the millions for prolific
+ * accounts. Summing `totalCommitContributions` year by year gives the number GitHub itself
+ * shows on a profile, which is the one people expect to see.
+ */
+async function fetchYearStatsGql(login: string, years: number[], token: string): Promise<YearStats> {
+  if (!years.length) return { calendars: [], commits: 0 };
+
+  const chunks: number[][] = [];
+  for (let i = 0; i < years.length; i += YEAR_CHUNK) chunks.push(years.slice(i, i + YEAR_CHUNK));
+
+  const results = await Promise.all(
+    chunks.map((c) =>
+      fetchYearChunk(login, c, token).catch((e) => {
+        // One bad chunk costs those years, not the whole history.
+        console.error("[github] year chunk failed", login, c[0], (e as Error).message);
+        return null;
+      }),
+    ),
+  );
+
+  const calendars: CalendarDay[][] = [];
+  let commits = 0;
+  for (const r of results) {
+    if (!r) continue;
+    calendars.push(...r.calendars);
+    commits += r.commits;
+  }
   return { calendars, commits };
 }
 
