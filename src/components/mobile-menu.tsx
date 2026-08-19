@@ -93,11 +93,11 @@ export function MobileMenu({ loggedIn, name }: Props) {
 
       {open ? (
         <>
-          <div className="fixed inset-0 top-[62px] z-40 bg-ink/25" aria-hidden="true" />
+          <div className="fixed inset-0 top-[var(--db-chrome)] z-40 bg-ink/25" aria-hidden="true" />
           <div
             id="db-mobile-menu"
             ref={panelRef}
-            className="fixed inset-x-0 top-[62px] z-50 max-h-[calc(100dvh-62px)] overflow-y-auto border-b-[2.5px] border-ink bg-paper px-4 pb-6 pt-4 shadow-[0_6px_0_rgba(43,43,43,0.15)]"
+            className="fixed inset-x-0 top-[var(--db-chrome)] z-50 max-h-[calc(100dvh-var(--db-chrome))] overflow-y-auto border-b-[2.5px] border-ink bg-paper px-4 pb-6 pt-4 shadow-[0_6px_0_rgba(43,43,43,0.15)]"
           >
             {loggedIn && name ? <div className="mb-3 px-1 text-sm text-muted">Signed in as {name}</div> : null}
             <div className="flex flex-col gap-1">

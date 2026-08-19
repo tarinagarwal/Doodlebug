@@ -92,7 +92,7 @@ export default function DocsPage() {
       </nav>
 
       {CARD_META.map((c, i) => (
-        <section key={c.type} id={c.type} className={`mt-10 ${i % 2 ? "sketch-2" : "sketch"} p-4 sm:p-5 md:p-6 scroll-mt-24`}>
+        <section key={c.type} id={c.type} className={`mt-10 ${i % 2 ? "sketch-2" : "sketch"} p-4 sm:p-5 md:p-6 scroll-mt-[calc(var(--db-chrome)+12px)]`}>
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="title-hand text-3xl sm:text-4xl">{c.label}</h2>
             <code className="code">/api/card/{c.type}</code>
@@ -128,7 +128,7 @@ export default function DocsPage() {
         </section>
       ))}
 
-      <section id="themes" className="mt-10 sketch-3 p-4 sm:p-5 md:p-6 scroll-mt-24">
+      <section id="themes" className="mt-10 sketch-3 p-4 sm:p-5 md:p-6 scroll-mt-[calc(var(--db-chrome)+12px)]">
         <h2 className="title-hand text-3xl sm:text-4xl">Themes</h2>
         <p className="mt-1 text-ink-soft">
           Use <code className="code">theme=&lt;key&gt;</code>. Override individual colours with <code className="code">bg</code>, <code className="code">ink</code>, <code className="code">accent</code>, <code className="code">accent2</code>, <code className="code">muted</code> (hex without #). See them all on the{" "}
@@ -157,7 +157,7 @@ export default function DocsPage() {
         </div>
       </section>
 
-      <section id="icons" className="mt-10 sketch p-4 sm:p-5 md:p-6 scroll-mt-24">
+      <section id="icons" className="mt-10 sketch p-4 sm:p-5 md:p-6 scroll-mt-[calc(var(--db-chrome)+12px)]">
         <h2 className="title-hand text-3xl sm:text-4xl">Icons</h2>
         <p className="mt-1 text-ink-soft">
           Names usable in <code className="code">banner?icons=</code> and <code className="code">skills?icons=Skill:icon</code>:

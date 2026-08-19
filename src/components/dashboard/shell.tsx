@@ -72,7 +72,7 @@ export function DashboardShell({ savedCount, githubUsername, hasToken, children 
     <div className="w-full lg:grid lg:grid-cols-[264px_minmax(0,1fr)]">
       {/* desktop sidebar: notebook spine */}
       <aside className="relative hidden lg:block">
-        <div className="fixed left-0 top-[62px] bottom-0 w-[264px] overflow-hidden border-r-[2.5px] border-ink bg-[#fbf6ea] px-3 py-4 pl-8">
+        <div className="fixed left-0 top-[var(--db-chrome)] bottom-0 w-[264px] overflow-hidden border-r-[2.5px] border-ink bg-[#fbf6ea] px-3 py-4 pl-8">
           {/* red margin line */}
           <div className="pointer-events-none absolute bottom-0 left-[22px] top-0 w-px bg-[#e5b8b8]" />
           {sidebar}
@@ -80,7 +80,7 @@ export function DashboardShell({ savedCount, githubUsername, hasToken, children 
       </aside>
 
       {/* mobile / tablet: horizontal strip */}
-      <div className="sticky top-[62px] z-30 border-b-[2.5px] border-ink bg-[#fbf6ea]/95 backdrop-blur lg:hidden">
+      <div className="sticky top-[var(--db-chrome)] z-30 border-b-[2.5px] border-ink bg-[#fbf6ea]/95 backdrop-blur lg:hidden">
         <div className="flex gap-2 overflow-x-auto px-3 py-2 [scrollbar-width:none]">
           {CARD_META.map((c) => (
             <Link key={c.type} href={`/dashboard?type=${c.type}`} className={cx("sketch-flat flex shrink-0 items-center gap-1.5 px-2.5 py-1 text-sm", activeType === c.type ? "bg-accent" : "bg-[#fffdf7]")}>

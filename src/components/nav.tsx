@@ -8,7 +8,7 @@ export { Footer } from "./footer";
 export async function Nav() {
   const user = await getCurrentUser();
   return (
-    <header className="sticky top-0 z-40 border-b-[2.5px] border-ink bg-paper/90 backdrop-blur">
+    <header className="border-b-[2.5px] border-ink bg-paper/90 backdrop-blur">
       <div className="flex w-full items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-4 md:px-6">
         <Link href="/" className="flex min-w-0 items-center gap-2 wiggle">
           <Mascot size={38} className="shrink-0 sm:hidden" />

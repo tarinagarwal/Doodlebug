@@ -18,13 +18,24 @@
 }
 
 :root {
+  /* Height of the sticky site chrome (star bar + nav). Anything positioned below it offsets
+     against this rather than repeating a magic number. */
+  --db-chrome: 99px;
   --ink: #2b2b2b;
   --paper: #fdf8ec;
   --shadow: #2b2b2b;
 }
 
+@media (min-width: 640px) {
+  :root {
+    --db-chrome: 105px;
+  }
+}
+
 html {
   scroll-behavior: smooth;
+  /* Anchor links must clear the sticky chrome. */
+  scroll-padding-top: calc(var(--db-chrome) + 12px);
 }
 
 body {

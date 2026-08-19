@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Caveat, Kalam, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import { Footer, Nav } from "@/components/nav";
+import { StarBar } from "@/components/star-bar";
 
 const patrick = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--font-patrick", display: "swap" });
 const caveat = Caveat({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-caveat", display: "swap" });
@@ -28,7 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${patrick.variable} ${caveat.variable} ${kalam.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <Nav />
+        <div className="sticky top-0 z-40">
+          <StarBar />
+          <Nav />
+        </div>
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
