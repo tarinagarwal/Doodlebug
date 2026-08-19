@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch makes an in-flight run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: typecheck · lint · test · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      # The card renderers are pure, so the suite above needs no services. The build does
+      # need the env vars to exist, but never connects — these are throwaway values.
+      - name: Build
+        run: pnpm build
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/doodlebug-ci
+          JWT_SECRET: ci-secret-that-is-definitely-long-enough-32
+          ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+          APP_URL: http://localhost:3000

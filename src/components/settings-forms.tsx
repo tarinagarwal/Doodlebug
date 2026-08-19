@@ -42,7 +42,7 @@ export function GithubForm({ user }: { user: PublicUser }) {
         });
       }}
     >
-      <h2 className="title-hand text-3xl">Profile</h2>
+      <h2 className="title-hand text-2xl sm:text-3xl">Profile</h2>
       {msg ? <Alert kind={msg.kind} className="my-3">{msg.text}</Alert> : null}
       <div className="mt-3 grid gap-x-4 md:grid-cols-2">
         <Field label="Display name">
@@ -76,7 +76,7 @@ export function TokenForm({ user }: { user: PublicUser }) {
   const { busy, msg, run } = useAction();
   return (
     <div>
-      <h2 className="title-hand text-3xl">GitHub token</h2>
+      <h2 className="title-hand text-2xl sm:text-3xl">GitHub token</h2>
       <p className="mt-1 text-ink-soft">
         Optional. Encrypted at rest with AES-256-GCM and only decrypted in memory to call GitHub. Unlocks the GraphQL API: private-contribution counts, accurate language bytes, review counts and no shared rate limits.
       </p>
@@ -146,11 +146,11 @@ export function PasswordForm() {
           await api("/api/settings/password", { method: "POST", json: { current, next } });
           setCurrent("");
           setNext("");
-          return "Password updated.";
+          return "Password updated. Every other device has been signed out.";
         });
       }}
     >
-      <h2 className="title-hand text-3xl">Password</h2>
+      <h2 className="title-hand text-2xl sm:text-3xl">Password</h2>
       {msg ? <Alert kind={msg.kind} className="my-3">{msg.text}</Alert> : null}
       <div className="mt-3 grid gap-x-4 md:grid-cols-2">
         <Field label="Current password">
@@ -167,6 +167,33 @@ export function PasswordForm() {
   );
 }
 
+/** Revokes every session for the account by bumping the user's token version. */
+export function SessionsForm() {
+  const { busy, msg, run } = useAction();
+  return (
+    <div>
+      <h2 className="title-hand text-2xl sm:text-3xl">Signed-in devices</h2>
+      <p className="mt-1 text-ink-soft">
+        Sessions last 30 days. If you think someone else has one, sign them all out — you will stay signed in here.
+      </p>
+      {msg ? <Alert kind={msg.kind} className="my-3">{msg.text}</Alert> : null}
+      <Button
+        type="button"
+        className="mt-3"
+        loading={busy}
+        onClick={() =>
+          run(async () => {
+            await api("/api/auth/logout-all", { method: "POST" });
+            return "Every other device has been signed out.";
+          })
+        }
+      >
+        <Icon name="logout" size={16} /> Sign out everywhere else
+      </Button>
+    </div>
+  );
+}
+
 export function DangerZone() {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -175,7 +202,7 @@ export function DangerZone() {
   const [confirm, setConfirm] = useState(false);
   return (
     <div>
-      <h2 className="title-hand text-3xl text-danger">Danger zone</h2>
+      <h2 className="title-hand text-2xl text-danger sm:text-3xl">Danger zone</h2>
       <p className="mt-1 text-ink-soft">Deleting your account removes your profile and encrypted token. Card URLs for your username keep working with public data.</p>
       {error ? <Alert kind="error" className="my-3">{error}</Alert> : null}
       {!confirm ? (

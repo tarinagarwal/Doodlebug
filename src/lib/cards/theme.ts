@@ -16,6 +16,21 @@ export interface Theme {
   /** colour of the grid decoration */
   gridColor: string;
   dark: boolean;
+  /**
+   * Optional dark counterpart. When present the card ships one body drawn in the light
+   * palette plus a `prefers-color-scheme: dark` block that recolours it, so a README reads
+   * correctly in either mode from a single URL.
+   */
+  autoDark?: DarkPalette;
+}
+
+export interface DarkPalette {
+  bg: string;
+  ink: string;
+  accent: string;
+  accent2: string;
+  muted: string;
+  gridColor: string;
 }
 
 export const THEMES: Record<string, Theme> = {
@@ -33,6 +48,18 @@ export const THEMES: Record<string, Theme> = {
   midnight: { key: "midnight", label: "Midnight", bg: "#1b1b2f", ink: "#eae6ff", accent: "#ff6b6b", accent2: "#4ecdc4", muted: "#a49fc4", grid: "dots", gridColor: "#2c2c48", dark: true },
   graphite: { key: "graphite", label: "Graphite", bg: "#2b2b2b", ink: "#f0f0f0", accent: "#ffd60a", accent2: "#80ed99", muted: "#b0b0b0", grid: "none", gridColor: "#3a3a3a", dark: true },
   dracula: { key: "dracula", label: "Dracula", bg: "#282a36", ink: "#f8f8f2", accent: "#ff79c6", accent2: "#50fa7b", muted: "#9aa0c9", grid: "none", gridColor: "#343746", dark: true },
+};
+
+/**
+ * `auto` is drawn in the paper palette and recoloured to midnight when the viewer prefers
+ * dark. Caveat worth knowing: an SVG loaded through <img> follows the browser/OS setting,
+ * not GitHub's own light/dark toggle, so it matches most readers but not every one.
+ */
+THEMES.auto = {
+  ...THEMES.paper,
+  key: "auto",
+  label: "Auto (light/dark)",
+  autoDark: { bg: "#1b1b2f", ink: "#eae6ff", accent: "#ff6b6b", accent2: "#4ecdc4", muted: "#a49fc4", gridColor: "#2c2c48" },
 };
 
 export const THEME_KEYS = Object.keys(THEMES);
@@ -61,5 +88,15 @@ export function resolveTheme(params: URLSearchParams): Theme {
   if (muted) t.muted = muted;
   const grid = params.get("grid");
   if (grid && ["none", "dots", "lines", "grid"].includes(grid)) t.grid = grid as Theme["grid"];
+  // An explicit colour override pins that colour in both schemes; leaving the dark value
+  // behind would make the override silently vanish for dark-mode readers.
+  if (t.autoDark) {
+    t.autoDark = { ...t.autoDark };
+    if (bg) t.autoDark.bg = bg;
+    if (ink) t.autoDark.ink = ink;
+    if (accent) t.autoDark.accent = accent;
+    if (accent2) t.autoDark.accent2 = accent2;
+    if (muted) t.autoDark.muted = muted;
+  }
   return t;
 }

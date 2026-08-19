@@ -161,20 +161,40 @@ interface GqlUser {
   repositoriesContributedTo: { totalCount: number };
 }
 
-async function fetchYearCalendarsGql(login: string, years: number[], token: string): Promise<CalendarDay[][]> {
-  if (!years.length) return [];
+interface YearStats {
+  calendars: CalendarDay[][];
+  /** all-time commits, summed from the per-year contribution collections */
+  commits: number;
+}
+
+/**
+ * GitHub exposes no all-time commit count. `/search/commits` looks like one but counts every
+ * indexed copy of a commit, so forks and mirrors inflate it into the millions for prolific
+ * accounts. Summing `totalCommitContributions` year by year gives the number GitHub itself
+ * shows on a profile, which is the one people expect to see.
+ */
+async function fetchYearStatsGql(login: string, years: number[], token: string): Promise<YearStats> {
+  if (!years.length) return { calendars: [], commits: 0 };
   const parts = years
     .map(
       (y) =>
-        `y${y}: contributionsCollection(from: "${y}-01-01T00:00:00Z", to: "${y}-12-31T23:59:59Z") { contributionCalendar { weeks { contributionDays { date contributionCount } } } }`,
+        `y${y}: contributionsCollection(from: "${y}-01-01T00:00:00Z", to: "${y}-12-31T23:59:59Z") { totalCommitContributions restrictedContributionsCount contributionCalendar { weeks { contributionDays { date contributionCount } } } }`,
     )
     .join("\n");
   const q = `query($login: String!) { user(login: $login) { ${parts} } }`;
-  const data = await ghGraphql<{ user: Record<string, { contributionCalendar: { weeks: { contributionDays: { date: string; contributionCount: number }[] }[] } }> }>(q, { login }, token);
-  return years.map((y) => {
-    const cal = data.user[`y${y}`]?.contributionCalendar;
-    return (cal?.weeks ?? []).flatMap((w) => w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount })));
+  type Year = {
+    totalCommitContributions: number;
+    restrictedContributionsCount: number;
+    contributionCalendar: { weeks: { contributionDays: { date: string; contributionCount: number }[] }[] };
+  };
+  const data = await ghGraphql<{ user: Record<string, Year> }>(q, { login }, token);
+  let commits = 0;
+  const calendars = years.map((y) => {
+    const yr = data.user[`y${y}`];
+    commits += (yr?.totalCommitContributions ?? 0) + (yr?.restrictedContributionsCount ?? 0);
+    return (yr?.contributionCalendar?.weeks ?? []).flatMap((w) => w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount })));
   });
+  return { calendars, commits };
 }
 
 async function fetchViaGraphql(login: string, token: string): Promise<UserBundle> {
@@ -192,14 +212,17 @@ async function fetchViaGraphql(login: string, token: string): Promise<UserBundle
   }
 
   const years = yearsSince(u.createdAt, 12);
-  const [yearCals, commitsAll] = await Promise.all([fetchYearCalendarsGql(login, years, token).catch(() => [] as CalendarDay[][]), allTimeCommits(login, token)]);
+  const yearStats = await fetchYearStatsGql(login, years, token).catch(() => ({ calendars: [], commits: 0 }) as YearStats);
   const thisYearCal = u.contributionsCollection.contributionCalendar.weeks.flatMap((w) => w.contributionDays.map((d) => ({ date: d.date, count: d.contributionCount })));
-  const allDays = mergeCalendars([...yearCals, thisYearCal]);
+  const allDays = mergeCalendars([...yearStats.calendars, thisYearCal]);
 
+  // Stars and forks count only repositories the user actually wrote. Counting forks here
+  // would credit them with other people's stars while their languages were already excluded.
   const ownRepos = repos.filter((r) => !r.isFork);
-  const totalStars = repos.reduce((a, r) => a + r.stargazerCount, 0);
-  const totalForks = repos.reduce((a, r) => a + r.forkCount, 0);
+  const totalStars = ownRepos.reduce((a, r) => a + r.stargazerCount, 0);
+  const totalForks = ownRepos.reduce((a, r) => a + r.forkCount, 0);
   const commitsThisYear = u.contributionsCollection.totalCommitContributions + u.contributionsCollection.restrictedContributionsCount;
+  const commitsAll = Math.max(yearStats.commits, commitsThisYear);
 
   // languages by bytes
   const bytes = new Map<string, { size: number; color: string }>();
@@ -225,7 +248,7 @@ async function fetchViaGraphql(login: string, token: string): Promise<UserBundle
     createdAt: u.createdAt,
     totalStars,
     totalForks,
-    totalCommits: commitsAll >= 0 ? commitsAll : commitsThisYear,
+    totalCommits: commitsAll,
     commitsThisYear,
     totalPRs: u.pullRequests.totalCount,
     mergedPRs: u.mergedPRs.totalCount,
@@ -233,8 +256,8 @@ async function fetchViaGraphql(login: string, token: string): Promise<UserBundle
     totalReviews: u.contributionsCollection.totalPullRequestReviewContributions,
     contributedTo: u.repositoriesContributedTo.totalCount,
     rank: calculateRank({
-      allCommits: commitsAll >= 0,
-      commits: commitsAll >= 0 ? commitsAll : commitsThisYear,
+      allCommits: true,
+      commits: commitsAll,
       prs: u.pullRequests.totalCount,
       issues: u.issues.totalCount,
       reviews: u.contributionsCollection.totalPullRequestReviewContributions,
@@ -312,8 +335,8 @@ async function fetchViaRest(login: string, token?: string): Promise<UserBundle> 
   const commitsThisYear = allDays.filter((d) => d.date.startsWith(thisYear)).reduce((a, d) => a + d.count, 0);
 
   const ownRepos = repos.filter((r) => !r.fork);
-  const totalStars = repos.reduce((a, r) => a + r.stargazers_count, 0);
-  const totalForks = repos.reduce((a, r) => a + r.forks_count, 0);
+  const totalStars = ownRepos.reduce((a, r) => a + r.stargazers_count, 0);
+  const totalForks = ownRepos.reduce((a, r) => a + r.forks_count, 0);
   const byLang = new Map<string, number>();
   for (const r of ownRepos) if (r.language) byLang.set(r.language, (byLang.get(r.language) ?? 0) + Math.max(1, r.size));
   const langs = toLangStats([...byLang.entries()].map(([name, size]) => ({ name, size, color: langColor(name) })), "repos");

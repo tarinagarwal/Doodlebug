@@ -1,5 +1,6 @@
 import { after } from "next/server";
 import { db } from "./db";
+import { cacheGet, cacheSet } from "./kv";
 import { RenderStat } from "./models";
 
 /**
@@ -93,4 +94,37 @@ export function resetRenderStats(): void {
   buffer.clear();
   lastFlush = Date.now();
   inFlight = null;
+}
+
+/** Totals for the whole retention window, cached so the homepage never aggregates per view. */
+export interface RenderTotals {
+  cards: number;
+  days: number;
+  topType: string | null;
+}
+
+const TOTALS_KEY = "stats:totals:v1";
+const TOTALS_TTL_MS = 10 * 60 * 1000;
+
+export async function getRenderTotals(): Promise<RenderTotals> {
+  const cached = await cacheGet<RenderTotals>(TOTALS_KEY);
+  if (cached) return cached;
+  const empty: RenderTotals = { cards: 0, days: RETAIN_DAYS, topType: null };
+  try {
+    await db();
+    const rows = await RenderStat.aggregate<{ _id: string | null; total: number }>([
+      { $group: { _id: "$type", total: { $sum: "$count" } } },
+      { $sort: { total: -1 } },
+    ]);
+    const totals: RenderTotals = {
+      cards: rows.reduce((a, r) => a + (r.total ?? 0), 0),
+      days: RETAIN_DAYS,
+      topType: rows[0]?._id ?? null,
+    };
+    await cacheSet(TOTALS_KEY, totals, TOTALS_TTL_MS);
+    return totals;
+  } catch (e) {
+    console.error("[stats] totals failed", e);
+    return empty;
+  }
 }

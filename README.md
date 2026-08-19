@@ -52,7 +52,19 @@ https://doodlebug.tarinagarwal.in/api/card/<type>?username=<login>&theme=<theme>
 [![My stats](https://doodlebug.tarinagarwal.in/api/card/stats?username=octocat&theme=chalkboard)](https://github.com/octocat)
 ```
 
-Themes: `paper` `notebook` `grid` `sticky` `kraft` `sakura` `forest` `ocean` `candy` `chalkboard` `blueprint` `midnight` `graphite` `dracula` — or override any colour with `bg`, `ink`, `accent`, `accent2`, `muted` (hex without `#`).
+Themes: `paper` `notebook` `grid` `sticky` `kraft` `sakura` `forest` `ocean` `candy` `chalkboard` `blueprint` `midnight` `graphite` `dracula` — or override any colour with `bg`, `ink`, `accent`, `accent2`, `muted` (hex without `#`). Browse them all on the [themes page](https://doodlebug.tarinagarwal.in/themes).
+
+`theme=auto` ships a single card that recolours itself: drawn in the paper palette, swapped to midnight under `prefers-color-scheme: dark`. Worth knowing that an SVG loaded through `<img>` follows the reader's browser/OS setting rather than GitHub's own light/dark toggle, so it suits most readers but not every one.
+
+### Saved cards get a short, stable URL
+
+Save a design in the dashboard and it is also served from a fixed address:
+
+```
+https://doodlebug.tarinagarwal.in/c/<saved-card-id>.svg
+```
+
+Paste that into your README once. Restyling the card in the dashboard updates every README using it — you never edit the markdown again. Query params still work and take precedence, so `?theme=midnight` previews a variant without saving a second card.
 
 Every parameter is documented on the [docs page](https://doodlebug.tarinagarwal.in/docs). The [dashboard](https://doodlebug.tarinagarwal.in/dashboard) has a guided builder (sidebar of card types, quick-start presets, live preview, one-click markdown), and every design can be **saved and edited later** under *My cards*.
 
@@ -80,12 +92,13 @@ pnpm typecheck   # tsc --noEmit
 
 | Variable | Purpose |
 |---|---|
-| `MONGODB_URI` | MongoDB connection string (users, cache, rate limits) |
+| `MONGODB_URI` | MongoDB connection string (accounts, saved cards) |
 | `JWT_SECRET` | Session signing secret (≥32 chars) |
 | `ENCRYPTION_KEY` | 64 hex chars — AES-256-GCM key for stored GitHub tokens |
 | `APP_URL` | Public URL, used in emails and generated snippets |
 | `SMTP_HOST` `SMTP_PORT` `SMTP_USER` `SMTP_PASS` `MAIL_FROM` | Verification / password-reset email |
-| `GITHUB_TOKEN` | Optional server-wide fallback token for public fetching |
+| `GITHUB_TOKEN` | Server-wide fallback token for public fetching. Strongly recommended: a **classic PAT with no scopes ticked** lifts the rate limit from 60/hr to 5,000/hr and switches every visitor onto the GraphQL path |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Optional Redis for the GitHub cache and rate-limit buckets. Falls back to MongoDB when unset. Use a **regional** database in the same region as your deployment, with **eviction enabled** |
 | `OPENAI_API_KEY` | Optional — only for `pnpm gen:assets` (illustration generation) |
 
 Deploys to Vercel with zero config.
@@ -96,9 +109,9 @@ Deploys to Vercel with zero config.
 - **rough.js** generator running server-side to sketch every rectangle, ring, arc and icon; deterministic per user via seeded randomness.
 - **Embedded fonts** — Patrick Hand, Caveat and Kalam subset to Latin and base64-embedded so SVGs render inside GitHub's image proxy.
 - **GitHub data** — GraphQL when a token is available, REST + the public contribution graph otherwise; results cached in MongoDB with stale-while-revalidate semantics.
-- **Auth** — email + password, SMTP verification, JWT session cookies, bcrypt, per-IP rate limiting.
+- **Auth** — email + password, SMTP verification, JWT session cookies, bcrypt, per-IP rate limiting. Sessions carry a `tokenVersion`, so a password reset or change strands every session issued before it — including one an attacker is holding.
 - **Card hot path** — no blocking database work: flood protection is an in-process counter, and render stats are buffered in memory and flushed as one bulk write after the response is sent. The tight limit sits on *uncached* GitHub lookups, which is where the cost actually is, so a popular README behind GitHub's camo proxy is never throttled for being popular.
-- **Tests** — every card type is rendered against a fixture bundle and checked for well-formed SVG, XML escaping, determinism and degenerate input (empty accounts, zero-width slices, 5,000-character text), plus golden snapshots.
+- **Tests** — every card type is rendered against a fixture bundle and checked for well-formed SVG, XML escaping, determinism and degenerate input (empty accounts, zero-width slices, 5,000-character text), plus golden snapshots. CI runs typecheck, lint, tests and a build on every push and PR.
 
 ## License
 

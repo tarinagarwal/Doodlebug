@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Icon, Sparkle, Squiggle, Star } from "@/components/doodles";
 
 const PERKS = [
-  { icon: "cards", title: "13 hand-drawn card types", body: "Stats, streaks, languages, trophies, heatmaps, banners, projects, achievements…" },
-  { icon: "palette", title: "14 themes + your own colours", body: "Paper, notebook, chalkboard, blueprint — or override any hex." },
+  { icon: "cards", title: "Thirteen hand-drawn card types", body: "Stats, streaks, languages, trophies, heatmaps, banners, projects, achievements…" },
+  { icon: "palette", title: "Fifteen themes + your own colours", body: "Paper, notebook, chalkboard, blueprint, auto light/dark — or override any hex." },
   { icon: "key", title: "Optional GitHub token", body: "Encrypted at rest. Unlocks private-contribution counts and no rate limits." },
   { icon: "bolt", title: "Live builder → copy markdown", body: "Preview is the exact SVG GitHub renders. Cards refresh themselves." },
 ];
@@ -19,10 +19,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/art/auth.webp" alt="Doodlebug mascot writing in a notebook" width={640} height={640} className="float mx-auto h-auto w-64 md:w-80 lg:w-[22rem]" />
         </div>
-        <h2 className="title-hand mt-2 text-4xl md:text-5xl">
+        <h2 className="title-hand mt-2 text-3xl sm:text-4xl md:text-5xl">
           Your README, <span className="hl">but doodled.</span>
         </h2>
-        <p className="mt-2 max-w-md text-lg text-ink-soft">One account, unlimited wobbly cards. Free forever — we only email you to verify or reset.</p>
+        <p className="mt-2 max-w-md text-base text-ink-soft sm:text-lg">One account, unlimited wobbly cards. Free forever — we only email you to verify or reset.</p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {PERKS.map((p, i) => (
             <li key={p.title} className={`${i % 2 ? "sketch-2" : "sketch"} p-3.5`}>
@@ -51,7 +51,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* ---------- right: the form ---------- */}
       <div className="order-1 lg:order-2">
-        <div className="relative mx-auto w-full max-w-md sketch-2 tape p-6 md:p-8">
+        <div className="relative mx-auto w-full max-w-md sketch-2 tape p-5 sm:p-6 md:p-8">
           <Squiggle className="absolute -bottom-3 right-6" width={80} />
           {children}
         </div>

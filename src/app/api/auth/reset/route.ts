@@ -20,8 +20,11 @@ export async function POST(req: Request) {
   if (!user) return err("Account no longer exists.", 404);
   user.passwordHash = await hashPassword(parsed.data.password);
   user.emailVerified = true;
+  // Resetting a password is how someone reacts to being compromised, so every session
+  // issued before this moment has to stop working — including the attacker's.
+  user.tokenVersion = (user.tokenVersion ?? 0) + 1;
   await user.save();
   await OneTimeToken.deleteMany({ userId: user._id });
-  await createSession(String(user._id));
+  await createSession(String(user._id), user.tokenVersion);
   return json({ ok: true });
 }

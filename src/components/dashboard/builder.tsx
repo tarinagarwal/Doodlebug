@@ -206,7 +206,7 @@ export function Builder({ username: accountUser, defaultTheme, origin, hasToken 
             <span className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-ink bg-accent shadow-[2px_2px_0_#2b2b2b]">
               <Icon name={meta.icon} size={20} />
             </span>
-            <h1 className="title-hand text-4xl md:text-5xl">{meta.label}</h1>
+            <h1 className="title-hand text-3xl sm:text-4xl md:text-5xl">{meta.label}</h1>
             {editing ? <span className="sketch-flat bg-[#cfe9e5] px-2 py-0.5 text-sm">editing “{editing.name}”</span> : null}
           </div>
           <p className="mt-1 text-ink-soft">{meta.help}</p>

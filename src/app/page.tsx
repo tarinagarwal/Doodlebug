@@ -3,21 +3,33 @@ import { Arrow, Cloud, Heart, Icon, Sparkle, Squiggle, Star, Underline } from "@
 import { CARD_META } from "@/lib/cards";
 import { THEMES } from "@/lib/cards/theme";
 import { getCurrentUser } from "@/lib/auth";
+import { getRenderTotals } from "@/lib/stats";
 
 const DEMO_USER = "tarinagarwal";
 
 export default async function Home() {
-  const user = await getCurrentUser();
+  const [user, totals] = await Promise.all([getCurrentUser(), getRenderTotals()]);
   const cta = user ? "/dashboard" : "/signup";
+  const cardCount = CARD_META.length;
+  const themeCount = Object.keys(THEMES).length;
   return (
     <div className="mx-auto max-w-7xl px-4 md:px-6">
       {/* ---------------- Hero ---------------- */}
       <section className="relative grid items-center gap-10 py-14 md:grid-cols-2 md:py-20">
-        <Sparkle className="absolute left-2 top-8 rotate-12" size={30} />
+        <Sparkle className="absolute left-2 top-8 rotate-12 hidden sm:block" size={30} />
         <Star className="absolute right-6 top-4 -rotate-12 hidden md:block" size={28} color="#ff5da2" />
         <div>
-          <p className="mb-3 inline-block sketch-flat bg-[#fde9b6] px-3 py-1 text-sm rotate-1">✎ free · no token required · 13 cards · 14 themes</p>
-          <h1 className="title-hand text-6xl leading-[0.95] md:text-7xl lg:text-8xl">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <p className="inline-block sketch-flat bg-[#fde9b6] px-3 py-1 text-sm rotate-1">
+              ✎ free · no token required · {cardCount} cards · {themeCount} themes
+            </p>
+            {totals.cards > 0 ? (
+              <p className="inline-block sketch-flat bg-[#cfe9e5] px-3 py-1 text-sm -rotate-1">
+                {totals.cards.toLocaleString("en-US")} cards drawn in the last {totals.days} days
+              </p>
+            ) : null}
+          </div>
+          <h1 className="title-hand text-5xl leading-[0.95] sm:text-6xl md:text-7xl lg:text-8xl">
             Your GitHub stats,
             <br />
             <span className="relative inline-block">
@@ -25,14 +37,14 @@ export default async function Home() {
               <Underline className="absolute -bottom-2 left-0 h-3 w-full" />
             </span>
           </h1>
-          <p className="mt-6 max-w-lg text-xl text-ink-soft">
+          <p className="mt-6 max-w-lg text-lg text-ink-soft sm:text-xl">
             Doodlebug turns your GitHub activity into <span className="hl">hand-drawn</span> stats cards, streak flames, language bars, trophies and banners — ready to paste into your README.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href={cta} className="btn btn-primary btn-lg">
+            <Link href={cta} className="btn btn-primary btn-lg w-full sm:w-auto">
               {user ? "Open my dashboard" : "Start doodling — it's free"} <Icon name="arrowRight" size={20} />
             </Link>
-            <Link href="/docs" className="btn btn-lg">
+            <Link href="/docs" className="btn btn-lg w-full sm:w-auto">
               Read the docs
             </Link>
           </div>
@@ -60,10 +72,10 @@ export default async function Home() {
 
       {/* ---------------- Marquee of cards ---------------- */}
       <section className="py-10">
-        <h2 className="title-hand text-4xl md:text-5xl">
-          Thirteen card types. <span className="hl-teal">One wobbly pen.</span>
+        <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">
+          {cardCount} card types. <span className="hl-teal">One wobbly pen.</span>
         </h2>
-        <p className="mt-2 max-w-2xl text-lg text-ink-soft">Every card is an SVG generated on the fly with sketchy rough.js strokes and embedded handwriting fonts, so it renders anywhere — including GitHub READMEs.</p>
+        <p className="mt-2 max-w-2xl text-base text-ink-soft sm:text-lg">Every card is an SVG generated on the fly with sketchy rough.js strokes and embedded handwriting fonts, so it renders anywhere — including GitHub READMEs.</p>
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           <Demo title="Top languages" src={`/api/card/langs?username=${DEMO_USER}&theme=notebook&layout=donut&langs_count=6`} rotate="rotate-1" />
           <Demo title="Trophies" src={`/api/card/trophies?username=${DEMO_USER}&theme=chalkboard&columns=4`} rotate="rotate-2" />
@@ -84,8 +96,8 @@ export default async function Home() {
       <section className="py-14">
         <div className="grid items-center gap-8 md:grid-cols-[1fr_320px]">
           <div>
-            <h2 className="title-hand text-4xl md:text-5xl">How it works</h2>
-            <p className="mt-2 max-w-xl text-lg text-ink-soft">No OAuth dance, no build step, no config files in your repo. Just a URL that draws itself.</p>
+            <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">How it works</h2>
+            <p className="mt-2 max-w-xl text-base text-ink-soft sm:text-lg">No OAuth dance, no build step, no config files in your repo. Just a URL that draws itself.</p>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/art/hero.webp" alt="Doodle of a laptop with charts, a rocket, a trophy and a coffee mug" width={1200} height={812} className="mx-auto h-auto w-full max-w-[320px] rotate-2" loading="lazy" />
@@ -99,8 +111,8 @@ export default async function Home() {
 
       {/* ---------------- Themes ---------------- */}
       <section className="py-10">
-        <h2 className="title-hand text-4xl md:text-5xl">Themes for every notebook</h2>
-        <p className="mt-2 text-lg text-ink-soft">Or override any colour with hex params. Dark themes look great on dark GitHub.</p>
+        <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">Themes for every notebook</h2>
+        <p className="mt-2 text-base text-ink-soft sm:text-lg">Or override any colour with hex params. Dark themes look great on dark GitHub.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           {Object.values(THEMES).map((t) => (
             <div key={t.key} className="sketch-flat flex items-center gap-2 px-3 py-1.5" style={{ background: t.bg, color: t.ink, borderColor: t.ink }}>
@@ -114,10 +126,10 @@ export default async function Home() {
 
       {/* ---------------- Features ---------------- */}
       <section className="py-14">
-        <h2 className="title-hand text-4xl md:text-5xl">Everything you&apos;d expect, drawn by hand</h2>
+        <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">Everything you&apos;d expect, drawn by hand</h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CARD_META.map((c, i) => (
-            <div key={c.type} className={`${i % 3 === 0 ? "sketch" : i % 3 === 1 ? "sketch-2" : "sketch-3"} p-5`}>
+            <div key={c.type} className={`${i % 3 === 0 ? "sketch" : i % 3 === 1 ? "sketch-2" : "sketch-3"} p-4 sm:p-5`}>
               <div className="flex items-center justify-between">
                 <h3 className="title-hand text-2xl">{c.label}</h3>
                 <code className="code">{c.type}</code>
@@ -151,11 +163,11 @@ export default async function Home() {
 
       {/* ---------------- FAQ ---------------- */}
       <section className="py-10">
-        <h2 className="title-hand text-4xl md:text-5xl">Questions people doodle in the margins</h2>
+        <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">Questions people doodle in the margins</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Faq q="Do I need a GitHub token?" a="No. Public data works for everyone. Without a token, Doodlebug uses GitHub's public API and the public contribution graph, which has shared rate limits — heavy traffic can occasionally show a 'rate limited' card. Adding a token in Settings fixes that permanently and adds private-contribution counts." />
           <Faq q="Why do I have to log in to use the site?" a="Your account stores your GitHub username, your (encrypted) token and your preferences, and lets Doodlebug prefer your token whenever anyone loads a card for your username. Card image URLs themselves are public so they render in READMEs." />
-          <Faq q="Which token scopes do I need?" a="A fine-grained token with no extra permissions (public data) works. For private contribution counts, grant read access to your repositories, or use a classic token with the repo and read:user scopes." />
+          <Faq q="Which token scopes do I need?" a="None. A classic token with every scope box left unchecked already lifts the rate limit and reads public data — that is all most cards need. Only add read:user (and repo, if you want private repositories counted) when you want private-contribution numbers." />
           <Faq q="How fresh is the data?" a="Cards refresh every 30 minutes (60 for public fetching) and are served with cache headers GitHub respects. Change a param — like &seed=2 — to force a new image." />
           <Faq q="Can I customise colours?" a="Yes: pick a theme, then override any of bg, ink, accent, accent2 or muted with a hex value, e.g. &accent=ff5da2." />
           <Faq q="Is it really hand-drawn?" a="Every stroke is generated with rough.js and a per-user seed, so your card is unique. Fonts are real handwriting fonts embedded into the SVG." />
@@ -164,14 +176,14 @@ export default async function Home() {
 
       {/* ---------------- CTA ---------------- */}
       <section className="py-16 text-center">
-        <div className="relative mx-auto max-w-2xl sketch-2 bg-[#fffdf7] p-8 md:p-12">
+        <div className="relative mx-auto max-w-2xl sketch-2 bg-[#fffdf7] p-6 sm:p-8 md:p-12">
           <Heart className="absolute -right-3 -top-3" size={34} />
           <Sparkle className="absolute -left-4 bottom-4" size={30} color="#2a9d8f" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/art/mascot.webp" alt="" width={120} height={124} className="mx-auto h-auto w-[120px] float" />
-          <h2 className="title-hand mt-2 text-5xl">Ready to doodle?</h2>
-          <p className="mt-2 text-lg text-ink-soft">Takes less time than choosing a README emoji.</p>
-          <div className="mt-6 flex justify-center gap-3">
+          <h2 className="title-hand mt-2 text-4xl sm:text-5xl">Ready to doodle?</h2>
+          <p className="mt-2 text-base text-ink-soft sm:text-lg">Takes less time than choosing a README emoji.</p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href={cta} className="btn btn-primary btn-lg">
               {user ? "Go to dashboard" : "Create free account"}
             </Link>
@@ -200,7 +212,7 @@ function Demo({ title, src, rotate }: { title: string; src: string; rotate: stri
 
 function Step({ n, title, body }: { n: number; title: string; body: string }) {
   return (
-    <div className="relative sketch p-6 pt-8">
+    <div className="relative sketch p-5 pt-8 sm:p-6">
       <div className="absolute -left-3 -top-4 flex h-11 w-11 items-center justify-center rounded-full border-[2.5px] border-ink bg-accent title-hand text-2xl shadow-[3px_3px_0_#2b2b2b]">{n}</div>
       <h3 className="title-hand text-2xl">{title}</h3>
       <p className="mt-2 text-ink-soft">{body}</p>

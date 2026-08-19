@@ -36,6 +36,37 @@ export function fontFaces(fonts: FrameOptions["fonts"] = ["hand", "title"]): str
   return faces.join("");
 }
 
+/**
+ * Recolour rules for `prefers-color-scheme: dark`.
+ *
+ * The body is drawn once, in the light palette. A CSS rule beats a presentation attribute on
+ * specificity, so matching each literal colour with an attribute selector re-paints the card
+ * without duplicating a single path. If the media query never matches — or CSS is dropped
+ * entirely — the light card that is already there stays correct.
+ */
+function darkModeCss(t: Theme): string {
+  const d = t.autoDark;
+  if (!d) return "";
+  const pairs: [string, string][] = [
+    [t.bg, d.bg],
+    [t.ink, d.ink],
+    [t.accent, d.accent],
+    [t.accent2, d.accent2],
+    [t.muted, d.muted],
+    [t.gridColor, d.gridColor],
+  ];
+  const seen = new Set<string>();
+  const rules: string[] = [];
+  for (const [light, dark] of pairs) {
+    // Two theme roles can resolve to the same literal; the first mapping wins so a single
+    // colour is never re-declared with conflicting values.
+    if (!light || light === dark || seen.has(light.toLowerCase())) continue;
+    seen.add(light.toLowerCase());
+    rules.push(`[fill="${light}"]{fill:${dark}}[stroke="${light}"]{stroke:${dark}}`);
+  }
+  return rules.length ? `@media (prefers-color-scheme:dark){${rules.join("")}}` : "";
+}
+
 function gridPattern(theme: Theme, id: string): { defs: string; fill: string } {
   const c = theme.gridColor;
   switch (theme.grid) {
@@ -106,7 +137,8 @@ export function frame(o: FrameOptions, body: string): string {
   const anim = o.animate === false ? "" : `<style>@keyframes db-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}} .db-body{animation:db-in .55s ease-out both}</style>`;
   const desc = o.desc ? `<desc>${esc(o.desc)}</desc>` : "";
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title ?? "Doodlebug card")}">${desc}<defs><style>${fontFaces(o.fonts)}</style>${grid.defs}${o.defs ?? ""}</defs>${anim}${parts.join("")}<g class="db-body" transform="translate(0 ${r(bodyOffset)})">${body}</g></svg>`;
+  const dark = darkModeCss(t);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title ?? "Doodlebug card")}">${desc}<defs><style>${fontFaces(o.fonts)}${dark}</style>${grid.defs}${o.defs ?? ""}</defs>${anim}${parts.join("")}<g class="db-body" transform="translate(0 ${r(bodyOffset)})">${body}</g></svg>`;
 }
 
 /** Card shown when something goes wrong (user not found, rate limit, ...). */

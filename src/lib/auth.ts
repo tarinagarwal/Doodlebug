@@ -20,8 +20,8 @@ export async function verifyPassword(pw: string, hash: string): Promise<boolean>
   return bcrypt.compare(pw, hash);
 }
 
-export async function createSession(userId: string): Promise<void> {
-  const jwt = await new SignJWT({ sub: userId })
+export async function createSession(userId: string, tokenVersion = 0): Promise<void> {
+  const jwt = await new SignJWT({ sub: userId, v: tokenVersion })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
@@ -41,25 +41,48 @@ export async function destroySession(): Promise<void> {
   jar.set(COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
 }
 
-export async function getSessionUserId(): Promise<string | null> {
+interface SessionClaims {
+  id: string;
+  /** token version the session was issued at; older versions are rejected */
+  v: number;
+}
+
+async function readSession(): Promise<SessionClaims | null> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value;
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, secret());
-    return typeof payload.sub === "string" ? payload.sub : null;
+    if (typeof payload.sub !== "string") return null;
+    return { id: payload.sub, v: typeof payload.v === "number" ? payload.v : 0 };
   } catch {
     return null;
   }
 }
 
-/** Returns the logged-in, email-verified user or null. */
-export async function getCurrentUser(): Promise<UserDoc | null> {
-  const id = await getSessionUserId();
-  if (!id) return null;
+export async function getSessionUserId(): Promise<string | null> {
+  return (await readSession())?.id ?? null;
+}
+
+/** Invalidates every session for a user and returns the new version. */
+export async function bumpTokenVersion(userId: string): Promise<number> {
   await db();
-  const user = await User.findById(id).lean<UserDoc>();
+  const updated = await User.findByIdAndUpdate(userId, { $inc: { tokenVersion: 1 } }, { new: true })
+    .select("tokenVersion")
+    .lean<{ tokenVersion?: number }>();
+  return updated?.tokenVersion ?? 0;
+}
+
+/** Returns the logged-in, email-verified user whose session is still current, or null. */
+export async function getCurrentUser(): Promise<UserDoc | null> {
+  const session = await readSession();
+  if (!session) return null;
+  await db();
+  const user = await User.findById(session.id).lean<UserDoc>();
   if (!user || !user.emailVerified) return null;
+  // A password reset or "log out everywhere" bumps tokenVersion, which strands every JWT
+  // issued before it — including one an attacker is still holding.
+  if ((user.tokenVersion ?? 0) !== session.v) return null;
   return user;
 }
 

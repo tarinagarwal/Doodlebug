@@ -44,13 +44,13 @@ export default function DocsPage() {
   const origin = appUrl();
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-      <h1 className="title-hand text-6xl">Docs</h1>
-      <p className="mt-2 max-w-2xl text-lg text-ink-soft">
+      <h1 className="title-hand text-4xl sm:text-5xl md:text-6xl">Docs</h1>
+      <p className="mt-2 max-w-2xl text-base text-ink-soft sm:text-lg">
         Every card is a plain URL that returns an SVG. Compose it in the <Link href="/dashboard" className="underline-squiggle">builder</Link> or by hand using the params below.
       </p>
 
-      <section className="mt-8 sketch p-5">
-        <h2 className="title-hand text-3xl">Base URL</h2>
+      <section className="mt-8 sketch p-4 sm:p-5">
+        <h2 className="title-hand text-2xl sm:text-3xl">Base URL</h2>
         <pre className="code mt-2">{`${origin}/api/card/<type>?username=<github-login>&theme=<theme>&…`}</pre>
         <ul className="mt-3 list-disc pl-6 text-ink-soft">
           <li>
@@ -61,6 +61,19 @@ export default function DocsPage() {
             If the username belongs to a Doodlebug account with a saved token, that token is used automatically — otherwise data comes from GitHub&apos;s public API and public contribution graph.
           </li>
           <li>Errors are returned as an error card (still an image), so your README never shows a broken picture.</li>
+        </ul>
+      </section>
+
+      <section className="mt-8 sketch-2 p-4 sm:p-5">
+        <h2 className="title-hand text-2xl sm:text-3xl">Saved cards get a short, stable URL</h2>
+        <p className="mt-2 text-ink-soft">
+          Save a design in the <Link href="/dashboard" className="underline-squiggle">builder</Link> and it also becomes available at a fixed
+          address. Paste that into your README once — restyling the card later updates every README using it, with no edit on your side.
+        </p>
+        <pre className="code mt-2">{`${origin}/c/<saved-card-id>.svg`}</pre>
+        <ul className="mt-3 list-disc pl-6 text-ink-soft">
+          <li>Query params still work and win over the saved ones, so <code className="code">?theme=midnight</code> previews a variant without saving a second card.</li>
+          <li>The link is public, like every card URL. Deleting the saved card turns it into a &ldquo;card not found&rdquo; image.</li>
         </ul>
       </section>
 
@@ -79,9 +92,9 @@ export default function DocsPage() {
       </nav>
 
       {CARD_META.map((c, i) => (
-        <section key={c.type} id={c.type} className={`mt-10 ${i % 2 ? "sketch-2" : "sketch"} p-5 md:p-6 scroll-mt-24`}>
+        <section key={c.type} id={c.type} className={`mt-10 ${i % 2 ? "sketch-2" : "sketch"} p-4 sm:p-5 md:p-6 scroll-mt-24`}>
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="title-hand text-4xl">{c.label}</h2>
+            <h2 className="title-hand text-3xl sm:text-4xl">{c.label}</h2>
             <code className="code">/api/card/{c.type}</code>
           </div>
           <p className="mt-1 text-ink-soft">{c.blurb}</p>
@@ -90,7 +103,8 @@ export default function DocsPage() {
             <img src={example(c.type)} alt={`${c.label} example`} className="h-auto max-w-full" loading="lazy" />
           </div>
           <pre className="code mt-3">{`![${c.label}](${origin}${example(c.type)})`}</pre>
-          <table className="mt-4 w-full text-[0.98rem]">
+          <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[520px] text-[0.98rem]">
             <thead>
               <tr className="text-left text-muted">
                 <th className="py-1 pr-3 font-normal">param</th>
@@ -110,13 +124,21 @@ export default function DocsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </section>
       ))}
 
-      <section id="themes" className="mt-10 sketch-3 p-5 md:p-6 scroll-mt-24">
-        <h2 className="title-hand text-4xl">Themes</h2>
+      <section id="themes" className="mt-10 sketch-3 p-4 sm:p-5 md:p-6 scroll-mt-24">
+        <h2 className="title-hand text-3xl sm:text-4xl">Themes</h2>
         <p className="mt-1 text-ink-soft">
-          Use <code className="code">theme=&lt;key&gt;</code>. Override individual colours with <code className="code">bg</code>, <code className="code">ink</code>, <code className="code">accent</code>, <code className="code">accent2</code>, <code className="code">muted</code> (hex without #).
+          Use <code className="code">theme=&lt;key&gt;</code>. Override individual colours with <code className="code">bg</code>, <code className="code">ink</code>, <code className="code">accent</code>, <code className="code">accent2</code>, <code className="code">muted</code> (hex without #). See them all on the{" "}
+          <Link href="/themes" className="underline-squiggle">themes page</Link>.
+        </p>
+        <p className="mt-2 text-ink-soft">
+          <code className="code">theme=auto</code> ships one card that recolours itself: it is drawn in the paper palette and swaps to midnight
+          under <code className="code">prefers-color-scheme: dark</code>. Colour overrides you set are kept in both schemes. Note that an SVG loaded
+          through <code className="code">&lt;img&gt;</code> follows the reader&apos;s browser or OS setting rather than GitHub&apos;s own light/dark
+          toggle, so it suits most readers but not every one.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {Object.values(THEMES).map((t) => (
@@ -135,8 +157,8 @@ export default function DocsPage() {
         </div>
       </section>
 
-      <section id="icons" className="mt-10 sketch p-5 md:p-6 scroll-mt-24">
-        <h2 className="title-hand text-4xl">Icons</h2>
+      <section id="icons" className="mt-10 sketch p-4 sm:p-5 md:p-6 scroll-mt-24">
+        <h2 className="title-hand text-3xl sm:text-4xl">Icons</h2>
         <p className="mt-1 text-ink-soft">
           Names usable in <code className="code">banner?icons=</code> and <code className="code">skills?icons=Skill:icon</code>:
         </p>
@@ -149,8 +171,8 @@ export default function DocsPage() {
         </div>
       </section>
 
-      <section className="mt-10 sketch-2 p-5 md:p-6">
-        <h2 className="title-hand text-4xl">Self-hosting</h2>
+      <section className="mt-10 sketch-2 p-4 sm:p-5 md:p-6">
+        <h2 className="title-hand text-3xl sm:text-4xl">Self-hosting</h2>
         <p className="mt-1 text-ink-soft">
           Doodlebug is a Next.js app. Clone{" "}
           <a className="underline-squiggle" href="https://github.com/tarinagarwal/Doodlebug" target="_blank" rel="noreferrer">

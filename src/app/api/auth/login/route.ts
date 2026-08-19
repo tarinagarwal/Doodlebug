@@ -17,6 +17,6 @@ export async function POST(req: Request) {
   if (!user.emailVerified) return err("Please verify your email first — check your inbox (and spam).", 403, { unverified: true });
   user.lastLoginAt = new Date();
   await user.save();
-  await createSession(String(user._id));
+  await createSession(String(user._id), user.tokenVersion ?? 0);
   return json({ ok: true, user: toPublicUser(user.toObject()) });
 }

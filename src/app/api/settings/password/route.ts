@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { User } from "@/lib/models";
-import { getCurrentUser, hashPassword, verifyPassword } from "@/lib/auth";
+import { createSession, getCurrentUser, hashPassword, verifyPassword } from "@/lib/auth";
 import { err, json, parseBody } from "@/lib/http";
 
 export const runtime = "nodejs";
@@ -16,6 +16,9 @@ export async function POST(req: Request) {
   if (!user) return err("User not found", 404);
   if (!(await verifyPassword(parsed.data.current, user.passwordHash))) return err("Current password is wrong.", 400);
   user.passwordHash = await hashPassword(parsed.data.next);
+  // Changing a password signs out every other device; re-issuing here keeps this one.
+  user.tokenVersion = (user.tokenVersion ?? 0) + 1;
   await user.save();
-  return json({ ok: true });
+  await createSession(String(user._id), user.tokenVersion);
+  return json({ ok: true, signedOutOtherDevices: true });
 }

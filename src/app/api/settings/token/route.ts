@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { CacheEntry, User } from "@/lib/models";
+import { User } from "@/lib/models";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { encrypt } from "@/lib/crypto";
+import { bundleCacheKeys } from "@/lib/github/service";
+import { cacheDel } from "@/lib/kv";
 import { validateToken } from "@/lib/github/fetch";
 import { err, json, parseBody } from "@/lib/http";
 
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
     { new: true },
   ).lean();
   if (!updated) return err("User not found", 404);
-  await CacheEntry.deleteMany({ key: { $regex: `^bundle:v2:${tokenLogin}:` } });
+  await cacheDel(bundleCacheKeys(tokenLogin));
   return json({ ok: true, user: toPublicUser(updated), login });
 }
 

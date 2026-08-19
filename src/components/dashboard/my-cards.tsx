@@ -15,7 +15,7 @@ export function MyCards({ cards: initial, origin }: { cards: SavedCardDTO[]; ori
   const [busy, setBusy] = useState<string | null>(null);
 
   async function remove(id: string) {
-    if (!confirm("Delete this card? README links to it keep working (the URL is public), you just lose the saved design.")) return;
+    if (!confirm("Delete this card?\n\nAny README using its /c/<id>.svg link will start showing a “card not found” image.")) return;
     setBusy(id);
     try {
       await api(`/api/cards/${id}`, { method: "DELETE" });
@@ -33,7 +33,7 @@ export function MyCards({ cards: initial, origin }: { cards: SavedCardDTO[]; ori
       <div className="mx-auto max-w-lg text-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/art/empty.webp" alt="" width={180} height={192} className="mx-auto h-auto w-[180px] float" />
-        <h2 className="title-hand mt-3 text-4xl">No saved cards yet</h2>
+        <h2 className="title-hand mt-3 text-3xl sm:text-4xl">No saved cards yet</h2>
         <p className="mt-2 text-ink-soft">Build a card, hit “Save card”, and it shows up here so you can come back and edit it any time.</p>
         <Link href="/dashboard?type=stats" className="btn btn-primary mt-5">
           <Icon name="plus" size={16} /> Build my first card
@@ -48,7 +48,10 @@ export function MyCards({ cards: initial, origin }: { cards: SavedCardDTO[]; ori
       <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
         {cards.map((c, i) => {
           const meta = CARD_META.find((m) => m.type === c.type);
-          const url = `${origin}/api/card/${c.type}${c.params ? "?" + c.params : ""}`;
+          const preview = `/api/card/${c.type}${c.params ? "?" + c.params : ""}`;
+          // The short URL is the one worth pasting: it points at the saved design rather than
+          // at a frozen set of params, so editing this card updates every README using it.
+          const url = `${origin}/c/${c.id}.svg`;
           const md = `[![${c.name}](${url})](https://github.com/)`;
           return (
             <div key={c.id} className={cx(i % 3 === 0 ? "sketch" : i % 3 === 1 ? "sketch-2" : "sketch-3", "flex flex-col p-4")}>
@@ -68,18 +71,21 @@ export function MyCards({ cards: initial, origin }: { cards: SavedCardDTO[]; ori
               </div>
               <div className="checker flex-1 rounded-lg p-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/api/card/${c.type}${c.params ? "?" + c.params : ""}`} alt={c.name} className="mx-auto h-auto max-w-full" loading="lazy" />
+                <img src={preview} alt={c.name} className="mx-auto h-auto max-w-full" loading="lazy" />
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <CopyButton text={md} label="Copy markdown" />
-                <CopyButton text={url} label="Copy URL" />
-                <a href={url} target="_blank" rel="noreferrer" className="btn btn-sm">
+                <CopyButton text={md} label="Copy markdown" variant="primary" />
+                <CopyButton text={url} label="Copy link" />
+                <a href={url} target="_blank" rel="noreferrer" className="btn btn-sm" aria-label="Open card in a new tab">
                   <Icon name="external" size={14} />
                 </a>
                 <Button type="button" size="sm" variant="danger" className="ml-auto" loading={busy === c.id} onClick={() => remove(c.id)} aria-label="Delete">
                   <Icon name="trash" size={14} />
                 </Button>
               </div>
+              <p className="mt-2 text-xs text-muted">
+                Paste it once — <code className="code break-all">/c/{c.id}.svg</code> keeps working after you edit this card.
+              </p>
             </div>
           );
         })}

@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { CacheEntry, User } from "@/lib/models";
+import { User } from "@/lib/models";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { ghRest, GitHubError } from "@/lib/github/client";
-import { normalizeLogin } from "@/lib/github/service";
+import { bundleCacheKeys, normalizeLogin } from "@/lib/github/service";
+import { cacheDel } from "@/lib/kv";
 import { err, json, parseBody } from "@/lib/http";
 import { THEMES } from "@/lib/cards/theme";
 
@@ -55,6 +56,6 @@ export async function POST(req: Request) {
 
   const updated = await User.findByIdAndUpdate(me._id, { $set: update }, { new: true }).lean();
   if (!updated) return err("User not found", 404);
-  if (update.githubUsername) await CacheEntry.deleteMany({ key: { $regex: `^bundle:v2:${update.githubUsername}:` } });
+  if (update.githubUsername) await cacheDel(bundleCacheKeys(String(update.githubUsername)));
   return json({ ok: true, user: toPublicUser(updated) });
 }

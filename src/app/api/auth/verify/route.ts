@@ -19,6 +19,6 @@ export async function POST(req: Request) {
   user.lastLoginAt = new Date();
   await user.save();
   await OneTimeToken.deleteMany({ userId: user._id, kind: "verify" });
-  await createSession(String(user._id));
+  await createSession(String(user._id), user.tokenVersion ?? 0);
   return json({ ok: true, user: toPublicUser(user.toObject()) });
 }

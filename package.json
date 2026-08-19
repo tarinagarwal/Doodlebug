@@ -13,6 +13,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@upstash/redis": "^1.38.2",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.9",
     "mongoose": "^9.9.3",

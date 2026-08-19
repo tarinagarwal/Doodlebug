@@ -12,6 +12,12 @@ const UserSchema = new Schema(
     githubTokenHint: { type: String }, // last 4 chars for display
     githubTokenValidatedAt: { type: Date },
     defaultTheme: { type: String, default: "paper" },
+    /**
+     * Bumped whenever every existing session must stop working (password reset, password
+     * change, "log out everywhere"). The value is baked into each JWT and compared on load,
+     * which gives revocation without a server-side session store.
+     */
+    tokenVersion: { type: Number, default: 0 },
     lastLoginAt: { type: Date },
   },
   { timestamps: true },

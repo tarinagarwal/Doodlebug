@@ -1,6 +1,7 @@
 import { after } from "next/server";
 import { db } from "../db";
-import { CacheEntry, User } from "../models";
+import { User } from "../models";
+import { cacheGet, cacheSet } from "../kv";
 import { decrypt } from "../crypto";
 import { fetchRepo, fetchUserBundle } from "./fetch";
 import { GitHubError } from "./client";
@@ -60,14 +61,17 @@ export async function resolveToken(login: string): Promise<{ token?: string; own
 }
 
 async function readCache<T>(key: string): Promise<Wrapped<T> | null> {
-  await db();
-  const doc = await CacheEntry.findOne({ key }).lean<{ value: Wrapped<T> }>();
-  return doc?.value ?? null;
+  return cacheGet<Wrapped<T>>(key);
 }
 
 async function writeCache<T>(key: string, value: Wrapped<T>, ttlMs: number): Promise<void> {
-  await db();
-  await CacheEntry.updateOne({ key }, { $set: { value, expiresAt: new Date(Date.now() + ttlMs) } }, { upsert: true });
+  await cacheSet(key, value, ttlMs);
+}
+
+/** Every cache key a login's bundle can live under — both auth states. */
+export function bundleCacheKeys(login: string): string[] {
+  const l = login.toLowerCase();
+  return [`bundle:v2:${l}:auth`, `bundle:v2:${l}:pub`];
 }
 
 export interface BundleResult {
@@ -83,7 +87,7 @@ export interface BundleResult {
 export async function getBundle(login: string, opts?: { token?: string; bypassCache?: boolean; clientKey?: string }): Promise<BundleResult> {
   const resolved = opts?.token ? { token: opts.token, owner: true } : await resolveToken(login);
   const authed = Boolean(resolved.token);
-  const key = `bundle:v2:${login}:${authed ? "auth" : "pub"}`;
+  const key = `bundle:v2:${login}:${authed ? "auth" : "pub"}`; // keep in sync with bundleCacheKeys()
   const now = Date.now();
 
   const cached = opts?.bypassCache ? null : await readCache<UserBundle>(key);
