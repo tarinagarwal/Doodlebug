@@ -43,9 +43,11 @@ export default async function Home() {
         <div className="relative">
           <Cloud className="absolute -top-6 right-2 hidden md:block" />
           <div className="relative rotate-2 sketch-2 tape p-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/api/card/stats?username=${DEMO_USER}&theme=paper&show=followers`} alt="Example hand-drawn stats card" width={495} height={200} className="h-auto w-full" />
           </div>
           <div className="relative -mt-6 ml-8 w-4/5 -rotate-2 sketch p-2 tape tape-left">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/api/card/streak?username=${DEMO_USER}&theme=sticky`} alt="Example hand-drawn streak card" width={495} height={195} className="h-auto w-full" />
           </div>
           <div className="absolute -bottom-14 -left-10 float hidden md:block">
@@ -73,6 +75,7 @@ export default async function Home() {
           <Demo title="Achievements" src={`/api/card/achievements?items=Winner:%20Gameathon%202K26%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants)&theme=paper`} rotate="rotate-2" />
         </div>
         <div className="mt-6 sketch-3 p-2 rotate-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={`/api/card/banner?username=${DEMO_USER}&theme=paper&text=full-stack%20dev%20%C2%B7%20game%20dev%20%C2%B7%20doodler`} alt="Example banner" className="h-auto w-full" width={900} height={230} />
         </div>
       </section>
@@ -111,7 +114,7 @@ export default async function Home() {
 
       {/* ---------------- Features ---------------- */}
       <section className="py-14">
-        <h2 className="title-hand text-4xl md:text-5xl">Everything you'd expect, drawn by hand</h2>
+        <h2 className="title-hand text-4xl md:text-5xl">Everything you&apos;d expect, drawn by hand</h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CARD_META.map((c, i) => (
             <div key={c.type} className={`${i % 3 === 0 ? "sketch" : i % 3 === 1 ? "sketch-2" : "sketch-3"} p-5`}>
@@ -187,6 +190,7 @@ function Demo({ title, src, rotate }: { title: string; src: string; rotate: stri
   return (
     <figure className={`${rotate}`}>
       <div className="sketch p-2 bg-[#fffdf7]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={title} className="h-auto w-full" loading="lazy" />
       </div>
       <figcaption className="mt-2 text-center text-muted">{title}</figcaption>

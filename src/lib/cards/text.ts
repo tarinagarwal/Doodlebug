@@ -11,13 +11,22 @@ export const FONT_FAMILY: Record<FontKey, string> = {
   kalam: "'Kalam','Patrick Hand','Comic Sans MS',cursive,sans-serif",
 };
 
+export function isFontKey(v: unknown): v is FontKey {
+  return v === "hand" || v === "title" || v === "kalam";
+}
+
+/** Coerces an untrusted query param to a real font key. */
+export function fontKey(v: string | null | undefined, def: FontKey = "hand"): FontKey {
+  return isFontKey(v) ? v : def;
+}
+
 // average advance width as a fraction of font-size
 const AVG: Record<FontKey, number> = { hand: 0.47, title: 0.4, kalam: 0.5 };
 const NARROW = new Set("iljtfr!.,:;'|I1 ()[]".split(""));
 const WIDE = new Set("mwMW@%&".split(""));
 
 export function measure(text: string, size: number, font: FontKey = "hand"): number {
-  const avg = AVG[font];
+  const avg = AVG[font] ?? AVG.hand;
   let w = 0;
   for (const ch of text) {
     if (NARROW.has(ch)) w += avg * 0.55;
@@ -83,7 +92,7 @@ export function text(x: number, y: number, str: string, o: TextOpts = {}): strin
   const attrs = [
     `x="${r(x)}"`,
     `y="${r(y)}"`,
-    `font-family="${FONT_FAMILY[font]}"`,
+    `font-family="${FONT_FAMILY[font] ?? FONT_FAMILY.hand}"`,
     `font-size="${size}"`,
     o.fill ? `fill="${o.fill}"` : "",
     o.anchor ? `text-anchor="${o.anchor}"` : "",

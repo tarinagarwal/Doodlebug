@@ -77,7 +77,7 @@ export function CardBuilder({ username: initialUser, defaultTheme, origin, hasTo
       setLoading(true);
     }, 450);
     return () => clearTimeout(t);
-  }, [url]);
+  }, [url, origin]);
 
   const alt = `${meta.label} card`;
   const md = `[![${alt}](${url})](https://github.com/${username || "tarinagarwal"})`;

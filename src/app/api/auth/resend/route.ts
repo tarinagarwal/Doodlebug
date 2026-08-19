@@ -2,12 +2,12 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { User } from "@/lib/models";
 import { issueVerification } from "@/lib/verification";
-import { clientIp, err, json, parseBody, rateLimit } from "@/lib/http";
+import { clientIp, err, json, parseBody, rateLimitSafe } from "@/lib/http";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const rl = await rateLimit(`resend:${clientIp(req)}`, 5, 900);
+  const rl = await rateLimitSafe(`resend:${clientIp(req)}`, 5, 900);
   if (!rl.allowed) return err("Please wait a bit before requesting another email.", 429);
   const parsed = await parseBody(req, z.object({ email: z.string().trim().email() }));
   if (!parsed.ok) return parsed.res;

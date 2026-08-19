@@ -2,7 +2,7 @@ import { Sketch } from "./draw";
 import { frame } from "./frame";
 import { icon, ICONS } from "./icons";
 import { int, list, str, type CommonParams } from "./params";
-import { measure, text, wrap } from "./text";
+import { fontKey, measure, text, wrap } from "./text";
 
 /** Sticky note with handwritten text + tape. No GitHub data needed. */
 export function noteCard(sp: URLSearchParams, c: CommonParams): string {
@@ -11,7 +11,7 @@ export function noteCard(sp: URLSearchParams, c: CommonParams): string {
   const body = str(sp, "text", 400) ?? "Write something nice here — use ?text=…";
   const author = str(sp, "author", 40);
   const size = int(sp, "size", 18, 12, 36);
-  const font = (sp.get("font") || "hand") as "hand" | "title" | "kalam";
+  const font = fontKey(sp.get("font"));
   const lines = wrap(body, W - 70, size, font, 12);
   const H = 56 + lines.length * (size * 1.35) + (author ? 34 : 18);
   const sk = new Sketch(c.seed + 97);

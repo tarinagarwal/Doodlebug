@@ -72,6 +72,12 @@ cp .env.example .env.local   # fill in MongoDB, SMTP, secrets
 pnpm dev
 ```
 
+```bash
+pnpm test        # card rendering + library unit tests (vitest, no DB or network needed)
+pnpm lint        # eslint
+pnpm typecheck   # tsc --noEmit
+```
+
 | Variable | Purpose |
 |---|---|
 | `MONGODB_URI` | MongoDB connection string (users, cache, rate limits) |
@@ -91,6 +97,8 @@ Deploys to Vercel with zero config.
 - **Embedded fonts** — Patrick Hand, Caveat and Kalam subset to Latin and base64-embedded so SVGs render inside GitHub's image proxy.
 - **GitHub data** — GraphQL when a token is available, REST + the public contribution graph otherwise; results cached in MongoDB with stale-while-revalidate semantics.
 - **Auth** — email + password, SMTP verification, JWT session cookies, bcrypt, per-IP rate limiting.
+- **Card hot path** — no blocking database work: flood protection is an in-process counter, and render stats are buffered in memory and flushed as one bulk write after the response is sent. The tight limit sits on *uncached* GitHub lookups, which is where the cost actually is, so a popular README behind GitHub's camo proxy is never throttled for being popular.
+- **Tests** — every card type is rendered against a fixture bundle and checked for well-formed SVG, XML escaping, determinism and degenerate input (empty accounts, zero-width slices, 5,000-character text), plus golden snapshots.
 
 ## License
 

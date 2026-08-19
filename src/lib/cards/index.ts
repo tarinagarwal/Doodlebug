@@ -27,7 +27,7 @@ export interface RenderResult {
 /**
  * Renders any card from query params. Never throws for expected failures — returns an error card instead.
  */
-export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { token?: string; bypassCache?: boolean }): Promise<RenderResult> {
+export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { token?: string; bypassCache?: boolean; clientKey?: string }): Promise<RenderResult> {
   const theme = resolveTheme(sp);
   const rawUser = sp.get("username") || sp.get("user") || "";
   const login = rawUser ? normalizeLogin(rawUser) : null;
@@ -42,7 +42,7 @@ export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { t
     const repoName = (sp.get("repo") || "").trim();
     if (login && /^[A-Za-z0-9_.-]{1,100}$/.test(repoName)) {
       try {
-        const repo = await getRepo(login, repoName);
+        const repo = await getRepo(login, repoName, { clientKey: opts?.clientKey });
         return { svg: projectCard(repo, sp, c0), cacheSeconds: 3600, ok: true, username: login };
       } catch {
         /* fall through to a data-free card */
@@ -63,7 +63,7 @@ export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { t
       if (!/^[A-Za-z0-9_.-]{1,100}$/.test(repoName)) {
         return { svg: errorCard(theme, "Which repo?", "Add &repo=name to the URL", `e.g. /api/card/repo?username=${login}&repo=my-project`), cacheSeconds: 60, ok: false, username: login };
       }
-      const repo = await getRepo(login, repoName);
+      const repo = await getRepo(login, repoName, { clientKey: opts?.clientKey });
       return { svg: repoCard(repo, sp, c), cacheSeconds: 3600, ok: true, username: login };
     }
 
@@ -92,6 +92,7 @@ export async function renderCard(type: CardType, sp: URLSearchParams, opts?: { t
       if (type === "repo") return { svg: errorCard(theme, "Repo not found", `No public repo "${login}/${sp.get("repo")}"`, "Check the spelling of &repo="), cacheSeconds: 300, ok: false, username: login };
       return { svg: errorCard(theme, "User not found", `GitHub doesn't know "${login}"`, "Check the spelling of ?username="), cacheSeconds: 300, ok: false, username: login };
     }
+    if (ge?.kind === "throttled") return { svg: errorCard(theme, "Slow down", "Too many new profiles looked up from this network", "Cards already drawn keep working — try again in a minute"), cacheSeconds: 60, ok: false, username: login };
     if (ge?.kind === "rate_limited") return { svg: errorCard(theme, "Rate limited", "GitHub is throttling public requests right now", "Log in to Doodlebug and add a token to fix this for good"), cacheSeconds: 120, ok: false, username: login };
     if (ge?.kind === "unauthorized") return { svg: errorCard(theme, "Token trouble", "The saved GitHub token was rejected", "Update it in your Doodlebug settings"), cacheSeconds: 120, ok: false, username: login };
     console.error("[card]", type, login, e);

@@ -2,12 +2,12 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { User } from "@/lib/models";
 import { createSession, toPublicUser, verifyPassword } from "@/lib/auth";
-import { clientIp, err, json, parseBody, rateLimit } from "@/lib/http";
+import { clientIp, err, json, parseBody, rateLimitSafe } from "@/lib/http";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const rl = await rateLimit(`login:${clientIp(req)}`, 30, 900);
+  const rl = await rateLimitSafe(`login:${clientIp(req)}`, 30, 900);
   if (!rl.allowed) return err("Too many login attempts. Take a breather and try again in 15 minutes.", 429);
   const parsed = await parseBody(req, z.object({ email: z.string().trim().email(), password: z.string().min(1).max(200) }));
   if (!parsed.ok) return parsed.res;

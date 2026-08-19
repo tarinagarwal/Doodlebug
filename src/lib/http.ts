@@ -37,6 +37,9 @@ export function clientIp(req: Request): string {
 
 /**
  * Fixed-window rate limiter backed by MongoDB (works across serverless instances).
+ *
+ * Use this for low-volume, correctness-sensitive routes (login, signup, password reset).
+ * High-volume paths should prefer `memRateLimit` from ./ratelimit — see that module.
  */
 export async function rateLimit(
   key: string,
@@ -47,19 +50,52 @@ export async function rateLimit(
   const now = new Date();
   const freshReset = new Date(now.getTime() + windowSec * 1000);
   const expired = { $or: [{ $eq: [{ $type: "$resetAt" }, "missing"] }, { $lt: ["$resetAt", now] }] };
-  const doc = await RateBucket.findOneAndUpdate(
-    { key },
-    [
-      {
-        $set: {
-          count: { $cond: [expired, 1, { $add: [{ $ifNull: ["$count", 0] }, 1] }] },
-          resetAt: { $cond: [expired, freshReset, "$resetAt"] },
+  const bump = async () =>
+    RateBucket.findOneAndUpdate(
+      { key },
+      [
+        {
+          $set: {
+            count: { $cond: [expired, 1, { $add: [{ $ifNull: ["$count", 0] }, 1] }] },
+            resetAt: { $cond: [expired, freshReset, "$resetAt"] },
+          },
         },
-      },
-    ],
-    { upsert: true, new: true, updatePipeline: true },
-  ).lean();
+      ],
+      { upsert: true, new: true },
+    ).lean();
+
+  let doc: Awaited<ReturnType<typeof bump>>;
+  try {
+    doc = await bump();
+  } catch (e) {
+    // Two concurrent requests for a key that does not exist yet both try to insert and one
+    // loses the race on the unique index. The document exists by now, so a single retry
+    // always takes the plain $inc path.
+    if (!isDuplicateKey(e)) throw e;
+    doc = await bump();
+  }
   const count = doc?.count ?? 1;
   const resetAt = doc?.resetAt ? new Date(doc.resetAt) : freshReset;
   return { allowed: count <= limit, remaining: Math.max(0, limit - count), resetAt };
+}
+
+function isDuplicateKey(e: unknown): boolean {
+  return typeof e === "object" && e !== null && (e as { code?: number }).code === 11000;
+}
+
+/**
+ * Wraps `rateLimit` so an unreachable/failing limit store can never take a route down.
+ * Fails open — availability matters more than a perfectly enforced limit here.
+ */
+export async function rateLimitSafe(
+  key: string,
+  limit: number,
+  windowSec: number,
+): Promise<{ allowed: boolean }> {
+  try {
+    return await rateLimit(key, limit, windowSec);
+  } catch (e) {
+    console.error("[rateLimit] store unavailable", key, e);
+    return { allowed: true };
+  }
 }

@@ -4,12 +4,28 @@ import { CacheEntry, User } from "../models";
 import { decrypt } from "../crypto";
 import { fetchRepo, fetchUserBundle } from "./fetch";
 import { GitHubError } from "./client";
+import { memRateLimit } from "../ratelimit";
 import type { RepoInfo, UserBundle } from "./types";
 
 const FRESH_AUTH_MS = 30 * 60 * 1000;
 const FRESH_PUBLIC_MS = 60 * 60 * 1000;
 const STALE_MS = 24 * 60 * 60 * 1000;
 const NEG_MS = 10 * 60 * 1000;
+
+/**
+ * A cache hit costs nothing, so the request limiter on the card route is generous. This is
+ * the limit that matters: how many *live* GitHub fetches one caller may trigger. Reaching
+ * it needs a caller cycling through logins we have never drawn before, which is exactly the
+ * abuse shape worth stopping.
+ */
+const COLD_FETCH_LIMIT = 30;
+const COLD_FETCH_WINDOW_MS = 60 * 1000;
+
+function assertColdFetchAllowed(clientKey: string | undefined, what: string): void {
+  if (!clientKey) return;
+  if (memRateLimit(`gh-cold:${clientKey}`, COLD_FETCH_LIMIT, COLD_FETCH_WINDOW_MS)) return;
+  throw new GitHubError("throttled", `Too many uncached ${what} lookups from this network`);
+}
 
 interface Wrapped<T> {
   data: T | null;
@@ -26,7 +42,11 @@ export function normalizeLogin(raw: string): string | null {
 /** Resolve the best token to use for a given GitHub login. */
 export async function resolveToken(login: string): Promise<{ token?: string; owner: boolean }> {
   await db();
+  // `githubUsername` is unique among token-bearing accounts (enforced when a token is
+  // saved), but sort anyway so a legacy duplicate resolves to the same token every time
+  // instead of whichever document Mongo happens to return first.
   const u = await User.findOne({ githubUsername: login, githubTokenEnc: { $exists: true, $ne: null }, emailVerified: true })
+    .sort({ githubTokenValidatedAt: -1, _id: 1 })
     .select("githubTokenEnc")
     .lean<{ githubTokenEnc?: string }>();
   if (u?.githubTokenEnc) {
@@ -60,7 +80,7 @@ export interface BundleResult {
  * Get a user's stats bundle: fresh cache → live fetch (falls back to stale on error).
  * Throws GitHubError when nothing usable is available.
  */
-export async function getBundle(login: string, opts?: { token?: string; bypassCache?: boolean }): Promise<BundleResult> {
+export async function getBundle(login: string, opts?: { token?: string; bypassCache?: boolean; clientKey?: string }): Promise<BundleResult> {
   const resolved = opts?.token ? { token: opts.token, owner: true } : await resolveToken(login);
   const authed = Boolean(resolved.token);
   const key = `bundle:v2:${login}:${authed ? "auth" : "pub"}`;
@@ -85,6 +105,8 @@ export async function getBundle(login: string, opts?: { token?: string; bypassCa
   }
 
   try {
+    // Nothing usable is cached, so this request is about to hit GitHub for real.
+    assertColdFetchAllowed(opts?.clientKey, "profile");
     const bundle = await refresh();
     return { bundle, cached: false, authed };
   } catch (e) {
@@ -106,7 +128,7 @@ function scheduleBackground(fn: () => Promise<unknown>): void {
   }
 }
 
-export async function getRepo(owner: string, name: string): Promise<RepoInfo> {
+export async function getRepo(owner: string, name: string, opts?: { clientKey?: string }): Promise<RepoInfo> {
   const o = owner.toLowerCase();
   const key = `repo:v1:${o}/${name.toLowerCase()}`;
   const now = Date.now();
@@ -117,6 +139,7 @@ export async function getRepo(owner: string, name: string): Promise<RepoInfo> {
   }
   const { token } = await resolveToken(o);
   try {
+    assertColdFetchAllowed(opts?.clientKey, "repository");
     const repo = await fetchRepo(owner, name, token);
     await writeCache(key, { data: repo, freshUntil: now + FRESH_PUBLIC_MS }, STALE_MS);
     return repo;

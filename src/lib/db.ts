@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const uri = process.env.MONGODB_URI;
 
 declare global {
-  // eslint-disable-next-line no-var
   var __mongoose: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
 }
 

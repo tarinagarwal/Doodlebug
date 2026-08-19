@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "gen:assets": "node scripts/gen-assets.mjs"
+    "gen:assets": "node scripts/gen-assets.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -22,12 +24,16 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22",
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.23",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }

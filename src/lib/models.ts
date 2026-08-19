@@ -50,20 +50,25 @@ export type RateDoc = InferSchemaType<typeof RateSchema>;
 export const RateBucket: Model<RateDoc> =
   (mongoose.models.RateBucket as Model<RateDoc>) || mongoose.model<RateDoc>("RateBucket", RateSchema);
 
-/* ---------------- Card render log (for stats on the site) ---------------- */
-const RenderSchema = new Schema(
-  {
-    username: { type: String, index: true },
-    type: { type: String },
-    theme: { type: String },
-    ip: { type: String },
-  },
-  { timestamps: { createdAt: true, updatedAt: false } },
-);
-RenderSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
-export type RenderDoc = InferSchemaType<typeof RenderSchema>;
-export const RenderLog: Model<RenderDoc> =
-  (mongoose.models.RenderLog as Model<RenderDoc>) || mongoose.model<RenderDoc>("RenderLog", RenderSchema);
+/* ---------------- Card render stats (for usage numbers on the site) ---------------- */
+/**
+ * Aggregated per day rather than one document per render: the card endpoint is an <img>
+ * src that GitHub's camo proxy hits constantly, so per-render inserts were unbounded
+ * write load for a collection nothing reads row-by-row. No username and no IP is stored,
+ * which is what the privacy page has always promised.
+ */
+const RenderStatSchema = new Schema({
+  /** UTC day, YYYY-MM-DD */
+  day: { type: String, required: true },
+  type: { type: String, required: true },
+  theme: { type: String, required: true },
+  count: { type: Number, default: 0 },
+  expiresAt: { type: Date, required: true, index: { expires: 0 } },
+});
+RenderStatSchema.index({ day: 1, type: 1, theme: 1 }, { unique: true });
+export type RenderStatDoc = InferSchemaType<typeof RenderStatSchema>;
+export const RenderStat: Model<RenderStatDoc> =
+  (mongoose.models.RenderStat as Model<RenderStatDoc>) || mongoose.model<RenderStatDoc>("RenderStat", RenderStatSchema);
 
 /* ---------------- Saved cards (user's designs, editable later) ---------------- */
 const SavedCardSchema = new Schema(

@@ -29,6 +29,13 @@ export async function POST(req: Request) {
     return err(`This token belongs to "${login}" but your profile is set to "${me.githubUsername}". Update your GitHub username first.`, 409);
   }
   await db();
+  // At most one account may hold a token for a given login, otherwise `resolveToken` has to
+  // pick between them. Both accounts proved ownership of the same GitHub identity, so the
+  // most recently verified one wins and any older claim is released.
+  await User.updateMany(
+    { _id: { $ne: me._id }, githubUsername: tokenLogin, githubTokenEnc: { $exists: true, $ne: null } },
+    { $unset: { githubTokenEnc: 1, githubTokenHint: 1, githubTokenValidatedAt: 1 } },
+  );
   const updated = await User.findByIdAndUpdate(
     me._id,
     {

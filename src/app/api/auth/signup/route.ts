@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { User } from "@/lib/models";
 import { hashPassword } from "@/lib/auth";
 import { issueVerification } from "@/lib/verification";
-import { clientIp, err, json, parseBody, rateLimit } from "@/lib/http";
+import { clientIp, err, json, parseBody, rateLimitSafe } from "@/lib/http";
 
 export const runtime = "nodejs";
 
@@ -14,7 +14,7 @@ const Schema = z.object({
 });
 
 export async function POST(req: Request) {
-  const rl = await rateLimit(`signup:${clientIp(req)}`, 10, 3600);
+  const rl = await rateLimitSafe(`signup:${clientIp(req)}`, 10, 3600);
   if (!rl.allowed) return err("Too many sign-ups from this network. Try again later.", 429);
   const parsed = await parseBody(req, Schema);
   if (!parsed.ok) return parsed.res;

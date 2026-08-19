@@ -1,4 +1,5 @@
-export type GhErrorKind = "not_found" | "rate_limited" | "unauthorized" | "network" | "other";
+/** `throttled` is *our* limiter refusing a cold lookup; `rate_limited` is GitHub refusing us. */
+export type GhErrorKind = "not_found" | "rate_limited" | "throttled" | "unauthorized" | "network" | "other";
 
 export class GitHubError extends Error {
   kind: GhErrorKind;
