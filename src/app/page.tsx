@@ -6,13 +6,15 @@ import { THEMES } from "@/lib/cards/theme";
 import { getCurrentUser } from "@/lib/auth";
 import { getRenderTotals } from "@/lib/stats";
 import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { FAQS, faqSchema, softwareApplicationSchema, webSiteSchema } from "@/lib/schema";
 
 const DEMO_USER = "tarinagarwal";
 
 export const metadata: Metadata = pageMetadata({
   title: "Doodlebug — hand-drawn GitHub stats cards for your README",
   description:
-    "Turn your GitHub activity into hand-drawn SVG cards: stats, streaks, top languages, trophies, contribution heatmaps, repo pins and banners. 13 card types, 15 themes, works for any public GitHub user. Free and open source, MIT licensed.",
+    "Turn your GitHub activity into hand-drawn SVG cards for your README: stats, streaks, top languages, trophies and banners. Free and open source.",
   path: "/",
   og: "home",
 });
@@ -24,6 +26,7 @@ export default async function Home() {
   const themeCount = Object.keys(THEMES).length;
   return (
     <div className="mx-auto max-w-7xl px-4 md:px-6">
+      <JsonLd data={[webSiteSchema(), softwareApplicationSchema(), faqSchema()]} />
       {/* ---------------- Hero ---------------- */}
       <section className="relative grid items-center gap-10 py-14 md:grid-cols-2 md:py-20">
         <Sparkle className="absolute left-2 top-8 rotate-12 hidden sm:block" size={30} />
@@ -183,15 +186,9 @@ export default async function Home() {
       <section className="py-10">
         <h2 className="title-hand text-3xl sm:text-4xl md:text-5xl">Questions people doodle in the margins</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <Faq q="Do I need a GitHub token?" a="No. Public data works for everyone. Without a token, Doodlebug uses GitHub's public API and the public contribution graph, which has shared rate limits — heavy traffic can occasionally show a 'rate limited' card. Adding a token in Settings fixes that permanently and adds private-contribution counts." />
-          <Faq q="Why do I have to log in to use the site?" a="Your account stores your GitHub username, your (encrypted) token and your preferences, and lets Doodlebug prefer your token whenever anyone loads a card for your username. Card image URLs themselves are public so they render in READMEs." />
-          <Faq q="Which token scopes do I need?" a="None. A classic token with every scope box left unchecked already lifts the rate limit and reads public data — that is all most cards need. Only add read:user (and repo, if you want private repositories counted) when you want private-contribution numbers." />
-          <Faq q="How fresh is the data?" a="Cards refresh every 30 minutes (60 for public fetching) and are served with cache headers GitHub respects. Change a param — like &seed=2 — to force a new image." />
-          <Faq q="Can I customise colours?" a="Yes: pick a theme, then override any of bg, ink, accent, accent2 or muted with a hex value, e.g. &accent=ff5da2." />
-          <Faq q="Can one card work in both light and dark mode?" a="Yes — use theme=auto. The card is drawn in the paper palette and recolours itself to midnight when the reader prefers dark, from a single URL. One caveat: an SVG loaded through an img tag follows the reader's browser or OS setting rather than GitHub's own light/dark toggle, so it matches most people but not everyone." />
-          <Faq q="Can I change a card after pasting it into my README?" a="Yes. Save a card and it also gets a short link like /c/<id>.svg. Paste that once, then restyle the card in the dashboard whenever you like — every README using the link updates on its own, and you never edit the markdown again." />
-          <Faq q="Is Doodlebug really free?" a="Yes, and it is open source under the MIT licence — a DevsBazaar product, open sourced. There is no paid tier, no seat limit and no feature held back. If you would rather not depend on the hosted version, clone the repository and run the whole thing yourself." />
-          <Faq q="Is it really hand-drawn?" a="Every stroke is generated with rough.js and a per-user seed, so your card is unique. Fonts are real handwriting fonts embedded into the SVG." />
+          {FAQS.map((f) => (
+            <Faq key={f.q} q={f.q} a={f.a} />
+          ))}
         </div>
       </section>
 

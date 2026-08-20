@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Log in",
   description:
-    "Log in to your Doodlebug account to build, save and edit your hand-drawn GitHub README cards.",
+    "Log in to build, save and edit your hand-drawn GitHub README cards.",
   path: "/login",
   og: "login",
 });

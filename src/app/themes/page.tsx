@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { THEMES } from "@/lib/cards/theme";
 import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Themes",
+  title: "15 GitHub README card themes, light and dark",
   description:
-    "Every Doodlebug theme side by side — paper, notebook, chalkboard, blueprint, midnight, dracula and an auto light/dark theme. Hand-drawn GitHub README card themes with live previews.",
+    "Every Doodlebug theme side by side: paper, notebook, chalkboard, blueprint, midnight, dracula and an auto light/dark theme, with live previews.",
   path: "/themes",
   og: "themes",
 });
@@ -19,6 +21,7 @@ export default function ThemesPage() {
   const themes = Object.values(THEMES);
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Themes", path: "/themes" }])} />
       <h1 className="title-hand text-4xl sm:text-5xl md:text-6xl">Themes</h1>
       <p className="mt-3 max-w-2xl text-base text-ink-soft sm:text-lg">
         Every theme, drawn on the same card. Add <code className="code break-all">?theme=</code> to any card URL — or override individual colours with{" "}

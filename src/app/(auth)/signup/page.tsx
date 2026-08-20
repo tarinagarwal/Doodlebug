@@ -7,9 +7,9 @@ import { Spinner } from "@/components/ui";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Sign up",
+  title: "Create a free account",
   description:
-    "Create a free Doodlebug account to save card designs, get a short stable link for each one, and optionally add an encrypted GitHub token for private-contribution counts.",
+    "Save card designs, get a short stable link for each one, and optionally add an encrypted GitHub token for private-contribution counts.",
   path: "/signup",
   og: "signup",
 });

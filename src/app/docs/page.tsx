@@ -5,11 +5,13 @@ import { THEMES } from "@/lib/cards/theme";
 import { appUrl } from "@/lib/verification";
 import { Squiggle } from "@/components/doodles";
 import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Docs",
+  title: "GitHub README card parameters and API reference",
   description:
-    "Every Doodlebug card is a plain URL that returns an SVG. Full parameter reference for all 13 card types, 15 themes, colour overrides, saved-card short links and self-hosting.",
+    "Every Doodlebug card is a URL that returns an SVG. Full parameter reference for all 13 card types, 15 themes, colour overrides and saved-card links.",
   path: "/docs",
   og: "docs",
 });
@@ -51,6 +53,7 @@ export default function DocsPage() {
   const origin = appUrl();
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Docs", path: "/docs" }])} />
       <h1 className="title-hand text-4xl sm:text-5xl md:text-6xl">Docs</h1>
       <p className="mt-2 max-w-2xl text-base text-ink-soft sm:text-lg">
         Every card is a plain URL that returns an SVG. Compose it in the <Link href="/dashboard" className="underline-squiggle">builder</Link> or by hand using the params below.
