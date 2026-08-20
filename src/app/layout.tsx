@@ -3,6 +3,7 @@ import { Caveat, Kalam, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import { Footer, Nav } from "@/components/nav";
 import { StarBar } from "@/components/star-bar";
+import { Analytics } from "@vercel/analytics/next";
 import { ogImagePath } from "@/lib/seo";
 
 const patrick = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--font-patrick", display: "swap" });
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <main className="flex-1">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

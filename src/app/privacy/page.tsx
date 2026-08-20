@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           <b className="text-ink">Email.</b> We send email only to verify your address and for password resets. No newsletters, no marketing.
         </p>
         <p>
-          <b className="text-ink">Cookies.</b> A single httpOnly session cookie keeps you logged in. No analytics or third-party trackers.
+          <b className="text-ink">Cookies and analytics.</b> A single httpOnly session cookie keeps you logged in — that is the only cookie Doodlebug sets. Page views are counted with Vercel Web Analytics, which is cookieless: it records aggregate counts per page and sets nothing on your device. There are no advertising trackers and nothing follows you to other sites.
         </p>
         <p>
           <b className="text-ink">Card images.</b> Card URLs are public by design so they can render in READMEs. They only contain data GitHub already shows publicly (or, with your token, counts you chose to expose).
