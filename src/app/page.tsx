@@ -101,7 +101,7 @@ export default async function Home() {
         </div>
         <div className="mt-6 sketch-3 p-2 rotate-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/api/card/banner?username=${DEMO_USER}&theme=paper&text=full-stack%20dev%20%C2%B7%20game%20dev%20%C2%B7%20doodler`} alt="Example banner" className="h-auto w-full" width={900} height={230} />
+          <img src={`/api/card/banner?username=${DEMO_USER}&theme=paper&text=full-stack%20dev%20%C2%B7%20game%20dev%20%C2%B7%20doodler`} alt="Example Doodlebug banner card with a name, tagline and doodle icons" className="h-auto w-full" width={900} height={230} loading="lazy" />
         </div>
       </section>
 
