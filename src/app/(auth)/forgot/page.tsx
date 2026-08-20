@@ -12,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
     "Send yourself a Doodlebug password reset link.",
   path: "/forgot",
   og: "login",
+  noIndex: true,
 });
 export const dynamic = "force-dynamic";
 
