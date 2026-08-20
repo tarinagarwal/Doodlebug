@@ -36,6 +36,12 @@ export const metadata: Metadata = {
     images: [OG],
   },
   icons: { icon: "/icon.svg" },
+  // Search Console / Bing ownership. Set the env vars and redeploy; omitted when unset so
+  // no empty meta tag is emitted.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
