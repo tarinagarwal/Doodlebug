@@ -1,3 +1,6 @@
+[![Scanned with LGTM Security](https://api.looksgoodtomeow.in/security/banner/6a86a44af7c34a4672912036.svg?theme=dark)](https://looksgoodtomeow.in)
+
+
 <div align="center">
 
 <img src="https://doodlebug.tarinagarwal.in/api/card/banner?name=Doodlebug&text=Hand-drawn%20GitHub%20stats%20cards%20for%20your%20README&subtitle=stats%20%C2%B7%20streaks%20%C2%B7%20languages%20%C2%B7%20trophies%20%C2%B7%20banners&icons=code,star,heart,rocket,coffee,fire,sparkle,bolt&theme=paper" alt="Doodlebug" width="100%"/>
