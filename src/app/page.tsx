@@ -90,14 +90,14 @@ export default async function Home() {
         </h2>
         <p className="mt-2 max-w-2xl text-base text-ink-soft sm:text-lg">Every card is an SVG generated on the fly with sketchy rough.js strokes and embedded handwriting fonts, so it renders anywhere — including GitHub READMEs.</p>
         <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <Demo title="Top languages" src={`/api/card/langs?username=${DEMO_USER}&theme=notebook&layout=donut&langs_count=6`} rotate="rotate-1" />
-          <Demo title="Trophies" src={`/api/card/trophies?username=${DEMO_USER}&theme=chalkboard&columns=4`} rotate="rotate-2" />
-          <Demo title="Contribution doodle" src={`/api/card/activity?username=${DEMO_USER}&theme=grid&weeks=26`} rotate="rotate-3" />
-          <Demo title="Activity graph" src={`/api/card/graph?username=${DEMO_USER}&theme=midnight&days=45`} rotate="rotate-1" />
-          <Demo title="Repo pin" src={`/api/card/repo?username=${DEMO_USER}&repo=Doodlebug&theme=sakura`} rotate="rotate-2" />
-          <Demo title="Skill stickers" src={`/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Redis,Docker,AWS,Solidity,Unreal&theme=kraft`} rotate="rotate-3" />
-          <Demo title="Project" src={`/api/card/project?name=LGTM%20%E2%80%94%20Looks%20Good%20To%20Meow&desc=Live%20AI%20code%20review%20%2B%20CI%2FCD%20security%20SaaS%3A%206-lens%20review%20pipeline%2C%2036%20security%20detectors%2C%20SBOM%2C%20posture%20analytics%2C%20org%20RBAC%20and%20a%20CLI.&tags=Node.js,TypeScript,React,MongoDB,Redis&link=looksgoodtomeow.in&badge=%2336%20Product%20of%20the%20Day&icon=cat&theme=forest`} rotate="rotate-1" />
-          <Demo title="Achievements" src={`/api/card/achievements?items=Winner:%20Gameathon%202K26%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants)&theme=paper`} rotate="rotate-2" />
+          <Demo title="Top languages" w={340} h={210} src={`/api/card/langs?username=${DEMO_USER}&theme=notebook&layout=donut&langs_count=6`} rotate="rotate-1" />
+          <Demo title="Trophies" w={476} h={268} src={`/api/card/trophies?username=${DEMO_USER}&theme=chalkboard&columns=4`} rotate="rotate-2" />
+          <Demo title="Contribution doodle" w={481} h={229} src={`/api/card/activity?username=${DEMO_USER}&theme=grid&weeks=26`} rotate="rotate-3" />
+          <Demo title="Activity graph" w={495} h={220} src={`/api/card/graph?username=${DEMO_USER}&theme=midnight&days=45`} rotate="rotate-1" />
+          <Demo title="Repo pin" w={400} h={193} src={`/api/card/repo?username=${DEMO_USER}&repo=Doodlebug&theme=sakura`} rotate="rotate-2" />
+          <Demo title="Skill stickers" w={495} h={158} src={`/api/card/skills?skills=TypeScript,React,Node.js,Python,MongoDB,Redis,Docker,AWS,Solidity,Unreal&theme=kraft`} rotate="rotate-3" />
+          <Demo title="Project" w={440} h={170} src={`/api/card/project?name=LGTM%20%E2%80%94%20Looks%20Good%20To%20Meow&desc=Live%20AI%20code%20review%20%2B%20CI%2FCD%20security%20SaaS%3A%206-lens%20review%20pipeline%2C%2036%20security%20detectors%2C%20SBOM%2C%20posture%20analytics%2C%20org%20RBAC%20and%20a%20CLI.&tags=Node.js,TypeScript,React,MongoDB,Redis&link=looksgoodtomeow.in&badge=%2336%20Product%20of%20the%20Day&icon=cat&theme=forest`} rotate="rotate-1" />
+          <Demo title="Achievements" w={495} h={234} src={`/api/card/achievements?items=Winner:%20Gameathon%202K26%20%26%20Buildverse%202025;Runner-up:%20GameForge%2C%20CodeSprint%2C%20Hacksphere%202025;Top%20100:%20Hackhazards%202025%20(8000%2B%20participants)&theme=paper`} rotate="rotate-2" />
         </div>
         <div className="mt-6 sketch-3 p-2 rotate-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -222,7 +222,7 @@ export default async function Home() {
               </div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/art/mascot.webp" alt="" width={150} height={156} className="mx-auto hidden h-auto w-[150px] float md:block" loading="lazy" />
+            <img src="/art/mascot.webp" alt="The Doodlebug mascot waving beside the open-source notice" width={150} height={156} className="mx-auto hidden h-auto w-[150px] float md:block" loading="lazy" />
           </div>
         </div>
       </section>
@@ -233,7 +233,7 @@ export default async function Home() {
           <Heart className="absolute -right-3 -top-3" size={34} />
           <Sparkle className="absolute -left-4 bottom-4" size={30} color="#2a9d8f" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/art/mascot.webp" alt="" width={120} height={124} className="mx-auto h-auto w-[120px] float" />
+          <img src="/art/mascot.webp" alt="The Doodlebug mascot, a smiling hand-drawn beetle holding a pencil" width={120} height={124} className="mx-auto h-auto w-[120px] float" />
           <h2 className="title-hand mt-2 text-4xl sm:text-5xl">Ready to doodle?</h2>
           <p className="mt-2 text-base text-ink-soft sm:text-lg">Takes less time than choosing a README emoji.</p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
@@ -251,12 +251,12 @@ export default async function Home() {
   );
 }
 
-function Demo({ title, src, rotate }: { title: string; src: string; rotate: string }) {
+function Demo({ title, src, rotate, w, h }: { title: string; src: string; rotate: string; w: number; h: number }) {
   return (
     <figure className={`${rotate}`}>
       <div className="sketch p-2 bg-[#fffdf7]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={title} className="h-auto w-full" loading="lazy" />
+        <img src={src} alt={title} width={w} height={h} className="h-auto w-full" loading="lazy" />
       </div>
       <figcaption className="mt-2 text-center text-muted">{title}</figcaption>
     </figure>

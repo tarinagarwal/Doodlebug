@@ -38,7 +38,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </ul>
         <div className="mt-6 -rotate-1 sketch-3 tape relative p-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/api/card/streak?username=tarinagarwal&theme=sticky&title=Your%20streak%20could%20look%20like%20this" alt="Example streak card" className="h-auto w-full" loading="lazy" />
+          <img src="/api/card/streak?username=tarinagarwal&theme=sticky&title=Your%20streak%20could%20look%20like%20this" alt="Example Doodlebug streak card showing total contributions and current streak" width={495} height={215} className="h-auto w-full" loading="lazy" />
         </div>
         <p className="mt-4 text-sm text-muted">
           Curious first?{" "}

@@ -18,6 +18,23 @@ export const metadata: Metadata = pageMetadata({
 
 const DEMO = "tarinagarwal";
 
+/** Intrinsic size of each example card, so the layout reserves the right box up front. */
+const PREVIEW: Record<string, [number, number]> = {
+  stats: [495, 217],
+  langs: [340, 210],
+  streak: [495, 215],
+  activity: [481, 229],
+  graph: [495, 220],
+  trophies: [476, 268],
+  repo: [400, 193],
+  banner: [900, 230],
+  skills: [495, 158],
+  note: [360, 98],
+  project: [440, 170],
+  achievements: [495, 286],
+  link: [185, 74],
+};
+
 function example(type: string): string {
   switch (type) {
     case "repo":
@@ -110,7 +127,7 @@ export default function DocsPage() {
           <p className="mt-1 text-ink-soft">{c.blurb}</p>
           <div className="mt-4 overflow-x-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={example(c.type)} alt={`${c.label} example`} className="h-auto max-w-full" loading="lazy" />
+            <img src={example(c.type)} alt={`${c.label} card example drawn by Doodlebug`} width={(PREVIEW[c.type] ?? [495, 220])[0]} height={(PREVIEW[c.type] ?? [495, 220])[1]} className="h-auto max-w-full" loading="lazy" />
           </div>
           <pre className="code mt-3">{`![${c.label}](${origin}${example(c.type)})`}</pre>
           <div className="mt-4 overflow-x-auto">
